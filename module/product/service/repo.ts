@@ -58,7 +58,7 @@ export class ProductRepo implements IProductRepository {
     const result = await db
       .select()
       .from(products)
-      .where(eq(products.id, id))
+      .where(and(eq(products.id, id), eq(products.status, Status.ACTIVE)))
       .limit(1);
     return result[0] ?? null;
   }
