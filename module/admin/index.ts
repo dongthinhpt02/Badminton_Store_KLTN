@@ -9,6 +9,8 @@ import { ImportService } from "../import/service";
 import { ImportRepo } from "../import/service/repo";
 import { ImportDetailService } from "../importdetail/service";
 import { ImportDetailRepo } from "../importdetail/service/repo";
+import { PaymentService } from "../payment/service";
+import { PaymentRepo } from "../payment/service/repo";
 import { ProductService } from "../product/service";
 import { ProductRepo } from "../product/service/repo";
 import { ProductItemService } from "../productitem/service";
@@ -38,6 +40,7 @@ export function setupAdminModule(sctx: ServiceContext) {
   const supplierRepository = new SupplierRepo();
   const importRepository = new ImportRepo();
   const importDetailRepository = new ImportDetailRepo(productItemRepository);
+  const paymentRepository = new PaymentRepo();
 
   const userService = new UserService(userRepository);
   const cateService = new CategoryService(cateRepository);
@@ -51,6 +54,7 @@ export function setupAdminModule(sctx: ServiceContext) {
   const supplierService = new SupplierService(supplierRepository);
   const importService = new ImportService(importRepository);
   const importDetailService = new ImportDetailService(importDetailRepository);
+  const paymentService = new PaymentService(paymentRepository);
 
   const controller = new HttpAdminController(
     userService,
@@ -65,6 +69,7 @@ export function setupAdminModule(sctx: ServiceContext) {
     supplierService,
     importService,
     importDetailService,
+    paymentService,
   );
 
   return controller.getRoutes(sctx.mdlFactory);

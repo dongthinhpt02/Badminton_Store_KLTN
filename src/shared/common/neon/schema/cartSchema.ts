@@ -15,7 +15,5 @@ export const cart = pgTable("carts", {
   totalQuantity: integer("totalQuantity").default(0).notNull(),
 
   // tiền nên dùng numeric (decimal) cho chuẩn
-  totalPrice: numeric("totalPrice", { precision: 12, scale: 2 })
-    .default("0")
-    .notNull(),
+  totalPrice: integer("totalPrice").default(0).notNull(),
 });

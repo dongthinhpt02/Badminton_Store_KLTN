@@ -28,7 +28,7 @@ export class ProductItemRepo implements IProductItemRepository {
         imageProductItem: form.imageProductItem ?? null,
         description: form.description?.trim() ?? null,
         quantity: 0,
-        price: form.price.toString(),
+        price: form.price,
         status: Status.ACTIVE,
         created_at: new Date(),
       })
@@ -50,7 +50,7 @@ export class ProductItemRepo implements IProductItemRepository {
         normalizedNameProductItem: normalized,
         imageProductItem: form.imageProductItem ?? null,
         description: form.description?.trim() ?? null,
-        price: form.price?.toString(),
+        price: form.price,
         updated_at: new Date(),
       })
       .where(eq(productItems.id, id))
@@ -301,7 +301,7 @@ export class ProductItemRepo implements IProductItemRepository {
       .update(productItems)
       .set({
         promotionId: promo.id,
-        pricePromotion: finalPrice.toString(),
+        pricePromotion: finalPrice,
         updated_at: new Date(),
       })
       .where(eq(productItems.id, id))

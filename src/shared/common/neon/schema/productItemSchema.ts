@@ -40,9 +40,9 @@ export const productItems = pgTable("product_items", {
 
   quantity: integer("quantity").notNull(),
 
-  price: numeric("price", { precision: 10, scale: 2 }).notNull(),
+  price: integer("price").notNull(),
 
-  pricePromotion: numeric("price_promotion", { precision: 10, scale: 2 }),
+  pricePromotion: integer("price_promotion"),
 
   imageProductItem: text("image_product_item").array(),
 

@@ -33,6 +33,8 @@ import { IImportService } from "../../import/interface";
 import { ICreateImportForm } from "../../import/model";
 import { IImportDetailService } from "../../importdetail/inteface";
 import { ICreateImportDetailForm } from "../../importdetail/model";
+import { IPaymentService } from "../../payment/interface";
+import { ICreatePaymentForm, IUpdatePaymentForm } from "../../payment/model";
 
 export class HttpAdminController {
   constructor(
@@ -48,6 +50,7 @@ export class HttpAdminController {
     private readonly supplierService: ISupplierService,
     private readonly importService: IImportService,
     private readonly importDetailService: IImportDetailService,
+    private readonly paymentService: IPaymentService,
   ) {}
   // ********************* user ********************* //
   private async signupAdmin(ctx: Context) {
@@ -577,6 +580,50 @@ export class HttpAdminController {
     const data = await this.importDetailService.getByProductItemId(id);
     return successResponse(data, ctx);
   }
+  // ********************* payment ********************* //
+  private async insertPayment(ctx: Context) {
+    const form = ctx.body as ICreatePaymentForm;
+    const data = await this.paymentService.create(form);
+    return successResponse(data, ctx);
+  }
+  private async updatePayment(ctx: Context) {
+    const id = ctx.query.id;
+    const form = ctx.body as IUpdatePaymentForm;
+    const data = await this.paymentService.update(id, form);
+    return successResponse(data, ctx);
+  }
+  private async deletePayment(ctx: Context) {
+    const id = ctx.query.id;
+    const data = await this.paymentService.delete(id);
+    return successResponse(data, ctx);
+  }
+  private async restorePayment(ctx: Context) {
+    const id = ctx.query.id;
+    const data = await this.paymentService.restore(id);
+    return successResponse(data, ctx);
+  }
+  private async getPaymentByIdAdmin(ctx: Context) {
+    const id = ctx.query.id;
+    const data = await this.paymentService.getByIdAdmin(id);
+    return successResponse(data, ctx);
+  }
+  private async getPaymentByNameAdmin(ctx: Context) {
+    const namePayment = ctx.query.namePayment;
+    const data = await this.paymentService.getByNameAdmin(namePayment);
+    return successResponse(data, ctx);
+  }
+  private async getAllPaymentActive(ctx: Context) {
+    const data = await this.paymentService.getAllPaymentActive();
+    return successResponse(data, ctx);
+  }
+  private async getAllPaymentInactive(ctx: Context) {
+    const data = await this.paymentService.getAllPaymentInactive();
+    return successResponse(data, ctx);
+  }
+  private async getAllPayment(ctx: Context) {
+    const data = await this.paymentService.getAllPayment();
+    return successResponse(data, ctx);
+  }
   getRoutes(mdlFactory: MdlFactory) {
     const module = new Elysia({ prefix: "/admin" })
       .post("/signup", this.signupAdmin.bind(this))
@@ -718,6 +765,19 @@ export class HttpAdminController {
       .get("/search/productitem-id", this.getImportDetailByProductId.bind(this))
       .get("/search/import-id", this.getImportDetailByImportId.bind(this));
 
+    const paymentRoutes = new Elysia({ prefix: "/payment" })
+      .derive(mdlFactory.auth)
+      .get("", this.getAllPayment.bind(this))
+      .get("/active", this.getAllPaymentActive.bind(this))
+      .get("/inactive", this.getAllPaymentInactive.bind(this))
+      .get("/search/id", this.getPaymentByIdAdmin.bind(this))
+      .get("/search/name", this.getPaymentByNameAdmin.bind(this))
+      .post("/create", this.insertPayment.bind(this))
+      .put("/update", this.updatePayment.bind(this))
+      .put("/delete", this.deletePayment.bind(this))
+      .put("/restore", this.restorePayment.bind(this));
+
+    module.use(paymentRoutes);
     module.use(importDetailRoutes);
     module.use(importRoutes);
     module.use(supplierRoutes);
