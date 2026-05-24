@@ -14,4 +14,5 @@ export * from "./importSchema";
 export * from "./importDetailSchema";
 export * from "./paymentSchema";
 export * from "./cartItemSchema";
+export * from "./storeSchema";
 // sau này thêm table thì add ở đây

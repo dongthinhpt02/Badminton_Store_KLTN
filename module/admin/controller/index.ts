@@ -35,6 +35,8 @@ import { IImportDetailService } from "../../importdetail/inteface";
 import { ICreateImportDetailForm } from "../../importdetail/model";
 import { IPaymentService } from "../../payment/interface";
 import { ICreatePaymentForm, IUpdatePaymentForm } from "../../payment/model";
+import { IStoreService } from "../../store/interface";
+import { ICreateStoreForm, IUpdateStoreForm } from "../../store/model";
 
 export class HttpAdminController {
   constructor(
@@ -51,6 +53,7 @@ export class HttpAdminController {
     private readonly importService: IImportService,
     private readonly importDetailService: IImportDetailService,
     private readonly paymentService: IPaymentService,
+    private readonly storeService: IStoreService,
   ) {}
   // ********************* user ********************* //
   private async signupAdmin(ctx: Context) {
@@ -624,6 +627,40 @@ export class HttpAdminController {
     const data = await this.paymentService.getAllPayment();
     return successResponse(data, ctx);
   }
+  // ********************* store ********************* //
+  private async insertStore(ctx: Context) {
+    const form = ctx.body as ICreateStoreForm;
+    const data = await this.storeService.create(form);
+    return successResponse(data, ctx);
+  }
+  private async updateStore(ctx: Context) {
+    const id = ctx.query.id;
+    const form = ctx.body as IUpdateStoreForm;
+    const data = await this.storeService.update(id, form);
+    return successResponse(data, ctx);
+  }
+  private async activeStore(ctx: Context) {
+    const id = ctx.query.id;
+    const data = await this.storeService.active(id);
+    return successResponse(data, ctx);
+  }
+  private async getStoreByIdAdmin(ctx: Context) {
+    const id = ctx.query.id;
+    const data = await this.storeService.getByIdAdmin(id);
+    return successResponse(data, ctx);
+  }
+  private async getActiveStoreByAdmin(ctx: Context) {
+    const data = await this.storeService.getActiveByAdmin();
+    return successResponse(data, ctx);
+  }
+  private async getInactiveStoreByAdmin(ctx: Context) {
+    const data = await this.storeService.getInactiveByAdmin();
+    return successResponse(data, ctx);
+  }
+  private async getAllStoreByAdmin(ctx: Context) {
+    const data = await this.storeService.getAll();
+    return successResponse(data, ctx);
+  }
   getRoutes(mdlFactory: MdlFactory) {
     const module = new Elysia({ prefix: "/admin" })
       .post("/signup", this.signupAdmin.bind(this))
@@ -777,6 +814,17 @@ export class HttpAdminController {
       .put("/delete", this.deletePayment.bind(this))
       .put("/restore", this.restorePayment.bind(this));
 
+    const storeRoutes = new Elysia({ prefix: "/store" })
+      .derive(mdlFactory.auth)
+      .get("", this.getAllStoreByAdmin.bind(this))
+      .get("/active", this.getActiveStoreByAdmin.bind(this))
+      .get("/inactive", this.getInactiveStoreByAdmin.bind(this))
+      .get("/search/id", this.getStoreByIdAdmin.bind(this))
+      .post("/create", this.insertStore.bind(this))
+      .put("/update", this.updateStore.bind(this))
+      .put("/active", this.activeStore.bind(this));
+
+    module.use(storeRoutes);
     module.use(paymentRoutes);
     module.use(importDetailRoutes);
     module.use(importRoutes);

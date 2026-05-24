@@ -61,6 +61,11 @@ export const userSchema = z.object({
 
   bio: z.string().nullable().optional(),
   avatar: z.string().nullable().optional(),
+
+  to_province: z.number().int().nullable().optional(),
+  to_district: z.number().int().nullable().optional(),
+  to_ward: z.string().nullable().optional(),
+  to_address: z.string().nullable().optional(),
 });
 
 export type User = z.infer<typeof userSchema>;
@@ -138,3 +143,13 @@ export const refreshToken = z.object({
   refreshTokenId: z.string().uuid(),
   Token: z.string(),
 });
+
+export const updateAddressSchema = userSchema
+  .pick({
+    to_province: true,
+    to_district: true,
+    to_ward: true,
+    to_address: true,
+  })
+  .partial();
+export type IUpdateAddressForm = z.infer<typeof updateAddressSchema>;

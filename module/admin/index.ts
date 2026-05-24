@@ -21,6 +21,8 @@ import { SizeService } from "../size/service";
 import { SizeRepo } from "../size/service/repo";
 import { SizeTypeService } from "../sizetype/service";
 import { SizeTypeRepo } from "../sizetype/service/repo";
+import { StoreService } from "../store/service";
+import { StoreRepo } from "../store/service/repo";
 import { SupplierService } from "../supplier/service";
 import { SupplierRepo } from "../supplier/service/repo";
 import { UserService } from "../user/service";
@@ -41,6 +43,7 @@ export function setupAdminModule(sctx: ServiceContext) {
   const importRepository = new ImportRepo();
   const importDetailRepository = new ImportDetailRepo(productItemRepository);
   const paymentRepository = new PaymentRepo();
+  const storeRepository = new StoreRepo();
 
   const userService = new UserService(userRepository);
   const cateService = new CategoryService(cateRepository);
@@ -55,6 +58,7 @@ export function setupAdminModule(sctx: ServiceContext) {
   const importService = new ImportService(importRepository);
   const importDetailService = new ImportDetailService(importDetailRepository);
   const paymentService = new PaymentService(paymentRepository);
+  const storeService = new StoreService(storeRepository);
 
   const controller = new HttpAdminController(
     userService,
@@ -70,6 +74,7 @@ export function setupAdminModule(sctx: ServiceContext) {
     importService,
     importDetailService,
     paymentService,
+    storeService,
   );
 
   return controller.getRoutes(sctx.mdlFactory);

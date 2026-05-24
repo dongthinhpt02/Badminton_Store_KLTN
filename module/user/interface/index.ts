@@ -6,6 +6,7 @@ import {
   ILoginForm,
   IResetPasswordForm,
   ISignupForm,
+  IUpdateAddressForm,
   IUpdateProfileForm,
   IUpdateUserForm,
   IUserCondForm,
@@ -32,6 +33,7 @@ export interface IUserRepository {
     type: TokenType,
     expiresIn: StringValue,
   ) => Promise<string>;
+
   //   renewToken: (oldRefreshToken: string) => Promise<IAuthen>;
   //   renewTokenAdmin: (oldRefreshToken: string) => Promise<IAuthen>;
   //   renewTokenManager: (oldRefreshToken: string) => Promise<IAuthen>;
@@ -45,6 +47,9 @@ export interface IUserService {
   getProfile: (id: string) => Promise<User>;
   renewToken(oldRefreshToken: string): Promise<IAuthen>;
   updateUser(id: string, form: IUpdateUserForm): Promise<User>;
+
+  updateAddress: (id: string, form: IUpdateAddressForm) => Promise<User>;
+
   sendEmailToResetPassword: (form: IResetPasswordForm) => Promise<string>;
   changePassword: (
     token: string,
@@ -56,6 +61,7 @@ export interface IUserService {
   renewTokenManager: (oldRefreshToken: string) => Promise<IAuthen>;
 
   logout: (refreshToken: string) => Promise<boolean>;
+
   //   signupAdmin(form: ISignupForm): Promise<IAuthen>;
   //   signupShipper(form: ISignupForm): Promise<IAuthen>;
   //   signupManager(form: ISignupForm): Promise<IAuthen>;

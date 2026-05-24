@@ -3,7 +3,13 @@ import appConfig from "../../../src/shared/common/config";
 import { TokenType, UserRole } from "../../../src/shared/interface";
 import { IUserRepository } from "../interface";
 import jwt from "../../../src/shared/common/jwt";
-import { ISignupForm, IUpdateUserForm, IUserCondForm, User } from "../model";
+import {
+  ISignupForm,
+  IUpdateAddressForm,
+  IUpdateUserForm,
+  IUserCondForm,
+  User,
+} from "../model";
 import { db } from "../../../src/shared/common/neon/index";
 import { users } from "../../../src/shared/common/neon/schema/userSchema";
 import { eq, and } from "drizzle-orm";

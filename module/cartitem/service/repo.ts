@@ -14,7 +14,7 @@ import {
   Status,
 } from "../model";
 
-export class CartItemRepository implements ICartItemRepository {
+export class CartItemRepo implements ICartItemRepository {
   async insert(form: ICreateCartItemForm): Promise<CartItem> {
     // tìm cart item đã tồn tại chưa
     const existingCartItem = await db

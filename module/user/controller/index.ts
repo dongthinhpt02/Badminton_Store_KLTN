@@ -5,6 +5,7 @@ import {
   loginSchema,
   resetPassowrdSchema,
   signupSchema,
+  updateAddressSchema,
   updateUserSchema,
 } from "../model";
 import { successResponse } from "../../../src/shared/utils/response";
@@ -70,6 +71,13 @@ export class HttpUserController {
 
     return successResponse(data, ctx);
   }
+  private async updateAddress(ctx: AuthContext) {
+    const user_id = ctx.decoded.sub;
+    const form = updateAddressSchema.parse(ctx.body);
+    const data = await this.service.updateAddress(user_id, form);
+
+    return successResponse(data, ctx);
+  }
   private async getProfile(ctx: AuthContext) {
     const user_id = ctx.decoded.sub;
     const data = await this.service.getProfile(user_id);
@@ -103,7 +111,8 @@ export class HttpUserController {
       .get("/renew", this.renewToken.bind(this))
       .delete("/logout", this.logout.bind(this))
       .get("/profile", this.getProfile.bind(this))
-      .put("/update", this.updateUser.bind(this));
+      .put("/update", this.updateUser.bind(this))
+      .put("/update/address", this.updateAddress.bind(this));
     module.use(usersRoute);
     return module;
   }

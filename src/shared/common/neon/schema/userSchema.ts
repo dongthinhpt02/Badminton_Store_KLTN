@@ -6,6 +6,7 @@ import {
   timestamp,
   pgEnum,
   date,
+  integer,
 } from "drizzle-orm/pg-core";
 
 // // ENUMS
@@ -63,4 +64,9 @@ export const users = pgTable("users", {
 
   bio: text("bio"),
   avatar: text("avatar"),
+
+  to_province: integer("to_province"),
+  to_district: integer("to_district"),
+  to_ward: text("to_ward"),
+  to_address: text("to_address"),
 });

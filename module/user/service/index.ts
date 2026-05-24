@@ -14,6 +14,7 @@ import {
   ILoginForm,
   IResetPasswordForm,
   ISignupForm,
+  IUpdateAddressForm,
   IUpdateUserForm,
   signupSchema,
   User,
@@ -86,7 +87,7 @@ export class UserService implements IUserService {
     if (checkCart.length === 0) {
       await db.insert(cart).values({
         userId: user.id,
-        totalPrice: "0",
+        totalPrice: 0,
         totalQuantity: 0,
       });
     }
@@ -166,7 +167,7 @@ export class UserService implements IUserService {
     });
     await db.insert(cart).values({
       userId: user.id,
-      totalPrice: "0",
+      totalPrice: 0,
       totalQuantity: 0,
     });
     console.log("👉 inserted token");
@@ -246,11 +247,11 @@ export class UserService implements IUserService {
     await db.insert(refreshToken).values({
       token: refresh_token,
     });
-    await db.insert(cart).values({
-      userId: user.id,
-      totalPrice: "0",
-      totalQuantity: 0,
-    });
+    // await db.insert(cart).values({
+    //   userId: user.id,
+    //   totalPrice: 0,
+    //   totalQuantity: 0,
+    // });
     console.log("👉 inserted token");
 
     return {
@@ -327,11 +328,11 @@ export class UserService implements IUserService {
     await db.insert(refreshToken).values({
       token: refresh_token,
     });
-    await db.insert(cart).values({
-      userId: user.id,
-      totalPrice: "0",
-      totalQuantity: 0,
-    });
+    // await db.insert(cart).values({
+    //   userId: user.id,
+    //   totalPrice: 0,
+    //   totalQuantity: 0,
+    // });
     console.log("👉 inserted token");
 
     return {
@@ -523,5 +524,17 @@ export class UserService implements IUserService {
       .where(eq(users.id, user.id));
 
     return true;
+  }
+  async updateAddress(id: string, form: IUpdateAddressForm): Promise<User> {
+    const result = await db
+      .update(users)
+      .set({
+        ...form,
+        updated_at: new Date(),
+      })
+      .where(eq(users.id, id))
+      .returning();
+
+    return result[0];
   }
 }
