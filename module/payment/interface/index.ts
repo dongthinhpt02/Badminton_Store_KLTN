@@ -1,3 +1,4 @@
+import { Order } from "../../order/model";
 import { ICreatePaymentForm, IUpdatePayment, Payment } from "../model";
 
 export interface IPaymentRepository {
@@ -12,12 +13,12 @@ export interface IPaymentRepository {
   findAllPaymentActive(): Promise<Payment[]>;
   findAllPaymentInactive(): Promise<Payment[]>;
   findAllPayment(): Promise<Payment[]>;
-  // VNPayPayment (id: string, payload: {
-  //     amount: number,
-  // }): Promise<any>
-  // CODPayment (id: string, payload: {
-  //     amount: number,
-  // }): Promise<any>
+  VNPayPayment(
+    id: string,
+    payload: {
+      amount: number;
+    },
+  ): Promise<any>;
 }
 export interface IPaymentService {
   create(form: ICreatePaymentForm): Promise<Payment>;
@@ -31,10 +32,16 @@ export interface IPaymentService {
   getAllPaymentActive(): Promise<Payment[]>;
   getAllPaymentInactive(): Promise<Payment[]>;
   getAllPayment(): Promise<Payment[]>;
-  // VNPayPayment(id: string, payload: {
-  //     amount: number,
-  // }): Promise<any>
-  // CODPayment(id: string, payload: {
-  //     amount: number,
-  // }): Promise<any>
+  VNPayPayment(
+    id: string,
+    payload: {
+      amount: number;
+    },
+  ): Promise<any>;
+  AfterVNPayPayment(
+    userId: string,
+    phonenumber: string,
+    vnParams: any,
+  ): Promise<Order>;
+  CODPayment(id: string, phonenumber: string): Promise<Order>;
 }

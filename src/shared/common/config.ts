@@ -52,8 +52,9 @@ const appConfig = {
     vnpUrl: process.env.VNP_URL,
     vnpTmnCode: process.env.VNP_TMNCODE,
     vnpHashSecret: process.env.VNP_HASHSECRET,
-    // vnpReturnUrl: `${process.env.APP_URL}:${process.env.APP_PORT}/payment/vnpay/return`,
-    vnpReturnUrl: `${process.env.APP_URL}:${process.env.FE_PORT}/checkout`,
+    vnpReturnUrl: `${process.env.APP_URL}:${process.env.APP_PORT}/payment/vnpay/return`,
+    // vnpReturnUrl: `${process.env.APP_URL}:${process.env.APP_PORT}/VnPayReturn`,
+    // vnpReturnUrl: `${process.env.APP_URL}:${process.env.FE_PORT}/checkout`,
   },
   PERSONAL: {
     phoneNumber: process.env.PHONE_NUMBER,
