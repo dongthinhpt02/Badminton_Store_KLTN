@@ -17,6 +17,7 @@ import { setupPromotionModule } from "../module/promotion";
 import { setupProductItemModule } from "../module/productitem";
 import { setupPaymentModule } from "../module/payment";
 import { setupCartModule } from "../module/cart";
+import { setupOrderModule } from "../module/order";
 // import testDB from "./testdb";
 async function bootServer(port: number) {
   // await testDB();
@@ -40,6 +41,7 @@ async function bootServer(port: number) {
   const productItemModule = setupProductItemModule(sctx);
   const paymentModule = setupPaymentModule(sctx);
   const cartModule = setupCartModule(sctx);
+  const orderModule = setupOrderModule(sctx);
 
   const adminModule = setupAdminModule(sctxadmin);
 
@@ -55,6 +57,7 @@ async function bootServer(port: number) {
   app.use(productItemModule);
   app.use(paymentModule);
   app.use(cartModule);
+  app.use(orderModule);
 
   app.use(adminModule);
 

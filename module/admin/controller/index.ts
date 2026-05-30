@@ -37,6 +37,7 @@ import { IPaymentService } from "../../payment/interface";
 import { ICreatePaymentForm, IUpdatePaymentForm } from "../../payment/model";
 import { IStoreService } from "../../store/interface";
 import { ICreateStoreForm, IUpdateStoreForm } from "../../store/model";
+import { IOrderService } from "../../order/interface";
 
 export class HttpAdminController {
   constructor(
@@ -54,6 +55,7 @@ export class HttpAdminController {
     private readonly importDetailService: IImportDetailService,
     private readonly paymentService: IPaymentService,
     private readonly storeService: IStoreService,
+    private readonly orderService: IOrderService,
   ) {}
   // ********************* user ********************* //
   private async signupAdmin(ctx: Context) {
@@ -661,6 +663,114 @@ export class HttpAdminController {
     const data = await this.storeService.getAll();
     return successResponse(data, ctx);
   }
+  // ********************* order ********************* //
+  private async getAllOrder(ctx: Context) {
+    const data = await this.orderService.getAllOrder();
+    return successResponse(data, ctx);
+  }
+  private async getOrderDetailByOrderId(ctx: Context) {
+    const orderId = ctx.query.orderId;
+    console.log(orderId);
+    const data = await this.orderService.getOrderDetail(orderId);
+    return successResponse(data, ctx);
+  }
+  private async getAllOrderProcessing(ctx: Context) {
+    const data = await this.orderService.getAllOrderProcessing();
+    return successResponse(data, ctx);
+  }
+  private async getAllOrderDelivered(ctx: Context) {
+    const data = await this.orderService.getAllOrderDelivered();
+    return successResponse(data, ctx);
+  }
+  private async getAllOrderCompleted(ctx: Context) {
+    const data = await this.orderService.getAllOrderCompleted();
+    return successResponse(data, ctx);
+  }
+  private async getAllOrderCancelled(ctx: Context) {
+    const data = await this.orderService.getAllOrderCancelled();
+    return successResponse(data, ctx);
+  }
+  private async getAllOrderProcssinByTime(ctx: Context) {
+    const startDate = ctx.query.startDate;
+    const endDate = ctx.query.endDate;
+    const data = await this.orderService.getAllOrderProcessingByTime(
+      startDate,
+      endDate,
+    );
+    return successResponse(data, ctx);
+  }
+  private async getAllOrderDeliveredByTime(ctx: Context) {
+    const startDate = ctx.query.startDate;
+    const endDate = ctx.query.endDate;
+    const data = await this.orderService.getAllOrderDeliveredByTime(
+      startDate,
+      endDate,
+    );
+    return successResponse(data, ctx);
+  }
+  private async getAllOrderCompletedByTime(ctx: Context) {
+    const startDate = ctx.query.startDate;
+    const endDate = ctx.query.endDate;
+    const data = await this.orderService.getAllOrderCompletedByTime(
+      startDate,
+      endDate,
+    );
+    return successResponse(data, ctx);
+  }
+  private async getAllOrderCancelledByTime(ctx: Context) {
+    const startDate = ctx.query.startDate;
+    const endDate = ctx.query.endDate;
+    const data = await this.orderService.getAllOrderCancelledByTime(
+      startDate,
+      endDate,
+    );
+    return successResponse(data, ctx);
+  }
+  private async getOrderByOrderId(ctx: Context) {
+    const id = ctx.query.id;
+    const data = await this.orderService.getOrderByOrderId(id);
+    return successResponse(data, ctx);
+  }
+  private async getAllOrderByUserId(ctx: Context) {
+    const userId = ctx.query.userId;
+    const data = await this.orderService.getAllOrderByUserId(userId);
+    return successResponse(data, ctx);
+  }
+  private async CancelledOrderAdmin(ctx: Context) {
+    const id = ctx.query.id;
+    const data = await this.orderService.CancelledOrderAdmin(id);
+    return successResponse(data, ctx);
+  }
+  private async TakeOrderDeliveredAdmin(ctx: Context) {
+    const id = ctx.query.id;
+    const data = await this.orderService.TakeOrderDeliveredAdmin(id);
+    return successResponse(data, ctx);
+  }
+  // ********************* statistic ********************* //
+  private async getStatistic(ctx: Context) {
+    const data = await this.orderService.generalStatistic();
+    return successResponse(data, ctx);
+  }
+  private async statisticByStatus(ctx: Context) {
+    const data = await this.orderService.statisticByStatus();
+    return successResponse(data, ctx);
+  }
+  private async statisticByTime(ctx: Context) {
+    const data = await this.orderService.statisticByTime();
+    return successResponse(data, ctx);
+  }
+  private async getTopSellingProductItem(ctx: Context) {
+    const data = await this.orderService.getTopSellingProductItem();
+    return successResponse(data, ctx);
+  }
+  private async getBrandStatistics(ctx: Context) {
+    const data = await this.orderService.getBrandStatistics();
+    return successResponse(data, ctx);
+  }
+  private async getCategoryStatistics(ctx: Context) {
+    const data = await this.orderService.getCategoryStatistics();
+    return successResponse(data, ctx);
+  }
   getRoutes(mdlFactory: MdlFactory) {
     const module = new Elysia({ prefix: "/admin" })
       .post("/signup", this.signupAdmin.bind(this))
@@ -823,7 +933,33 @@ export class HttpAdminController {
       .post("/create", this.insertStore.bind(this))
       .put("/update", this.updateStore.bind(this))
       .put("/active", this.activeStore.bind(this));
+    const orderRoutes = new Elysia({ prefix: "/order" })
+      .derive(mdlFactory.auth)
+      .get("", this.getAllOrder.bind(this))
+      .get("/search/id", this.getOrderByOrderId.bind(this))
+      .get("/order-detail", this.getOrderDetailByOrderId.bind(this))
+      .get("/all-order-processing", this.getAllOrderProcessing.bind(this))
+      .get("/all-order-delivered", this.getAllOrderDelivered.bind(this))
+      .get("/all-order-completed", this.getAllOrderCompleted.bind(this))
+      .get("/all-order-cancelled", this.getAllOrderCancelled.bind(this))
+      .get("/order-created/time", this.getAllOrderProcssinByTime.bind(this))
+      .get("/order-delivered/time", this.getAllOrderDeliveredByTime.bind(this))
+      .get("/order-completed/time", this.getAllOrderCompletedByTime.bind(this))
+      .get("/order-cancelled/time", this.getAllOrderCancelledByTime.bind(this))
+      .get("/search-by-userid", this.getAllOrderByUserId.bind(this))
+      .put("/cancel-order", this.CancelledOrderAdmin.bind(this))
+      .put("/take-delivered", this.TakeOrderDeliveredAdmin.bind(this));
+    const statisticRoutes = new Elysia({ prefix: "/statistic" })
+      .derive(mdlFactory.auth)
+      .get("/general-statistic", this.getStatistic.bind(this))
+      .get("/by-status", this.statisticByStatus.bind(this))
+      .get("/by-time", this.statisticByTime.bind(this))
+      .get("/top-selling", this.getTopSellingProductItem.bind(this))
+      .get("/by-brand", this.getBrandStatistics.bind(this))
+      .get("/by-cate", this.getCategoryStatistics.bind(this));
 
+    module.use(statisticRoutes);
+    module.use(orderRoutes);
     module.use(storeRoutes);
     module.use(paymentRoutes);
     module.use(importDetailRoutes);

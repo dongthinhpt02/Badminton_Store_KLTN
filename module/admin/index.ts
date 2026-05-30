@@ -1,6 +1,9 @@
 import { ServiceContext } from "../../src/shared/interface";
 import { BrandService } from "../brand/service";
 import { BrandRepo } from "../brand/service/repo";
+import { CartService } from "../cart/service";
+import { CartRepo } from "../cart/service/repo";
+import { CartItemRepo } from "../cartitem/service/repo";
 import { CategoryService } from "../category/service";
 import { CategoryRepo } from "../category/service/repo";
 import { ColorService } from "../color/service";
@@ -9,6 +12,9 @@ import { ImportService } from "../import/service";
 import { ImportRepo } from "../import/service/repo";
 import { ImportDetailService } from "../importdetail/service";
 import { ImportDetailRepo } from "../importdetail/service/repo";
+import { OrderService } from "../order/service";
+import { OrderRepo } from "../order/service/repo";
+import { OrderDetailRepo } from "../orderdetail/service/repo";
 import { PaymentService } from "../payment/service";
 import { PaymentRepo } from "../payment/service/repo";
 import { ProductService } from "../product/service";
@@ -42,8 +48,19 @@ export function setupAdminModule(sctx: ServiceContext) {
   const supplierRepository = new SupplierRepo();
   const importRepository = new ImportRepo();
   const importDetailRepository = new ImportDetailRepo(productItemRepository);
-  const paymentRepository = new PaymentRepo();
+
+  const cartRepo = new CartRepo();
+  const cartItemRepo = new CartItemRepo();
+  const cartService = new CartService(
+    cartRepo,
+    new StoreRepo(),
+    cartItemRepo,
+    userRepository,
+  );
+
+  const paymentRepository = new PaymentRepo(userRepository);
   const storeRepository = new StoreRepo();
+  const orderRepository = new OrderRepo();
 
   const userService = new UserService(userRepository);
   const cateService = new CategoryService(cateRepository);
@@ -57,8 +74,14 @@ export function setupAdminModule(sctx: ServiceContext) {
   const supplierService = new SupplierService(supplierRepository);
   const importService = new ImportService(importRepository);
   const importDetailService = new ImportDetailService(importDetailRepository);
-  const paymentService = new PaymentService(paymentRepository);
+  const paymentService = new PaymentService(
+    paymentRepository,
+    cartService,
+    new OrderDetailRepo(),
+    orderRepository,
+  );
   const storeService = new StoreService(storeRepository);
+  const orderService = new OrderService(orderRepository);
 
   const controller = new HttpAdminController(
     userService,
@@ -75,6 +98,7 @@ export function setupAdminModule(sctx: ServiceContext) {
     importDetailService,
     paymentService,
     storeService,
+    orderService,
   );
 
   return controller.getRoutes(sctx.mdlFactory);
