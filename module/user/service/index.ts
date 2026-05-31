@@ -24,7 +24,7 @@ import {
   ErrEmailNotFound,
   ErrInvalidEmailAndPassword,
 } from "../model/error";
-import { eq, or } from "drizzle-orm";
+import { eq, or, and } from "drizzle-orm";
 import { StringValue } from "ms";
 
 export class UserService implements IUserService {
@@ -536,5 +536,73 @@ export class UserService implements IUserService {
       .returning();
 
     return result[0];
+  }
+  async getAllUserAdmin(): Promise<User[]> {
+    const result = await db.select().from(users).where(eq(users.role, "user"));
+
+    return result as User[];
+  }
+  async getAllUserActiveAdmin(): Promise<User[]> {
+    const result = await db
+      .select()
+      .from(users)
+      .where(and(eq(users.role, "user"), eq(users.status, "active")));
+
+    return result as User[];
+  }
+  async getAllUserInactiveAdmin(): Promise<User[]> {
+    const result = await db
+      .select()
+      .from(users)
+      .where(and(eq(users.role, "user"), eq(users.status, "inactive")));
+
+    return result as User[];
+  }
+  async getAllManager(): Promise<User[]> {
+    const result = await db
+      .select()
+      .from(users)
+      .where(eq(users.role, "manager"));
+    return result as User[];
+  }
+  async getAllManagerActiveAdmin(): Promise<User[]> {
+    const result = await db
+      .select()
+      .from(users)
+      .where(and(eq(users.role, "manager"), eq(users.status, "active")));
+
+    return result as User[];
+  }
+  async getAllManagerInactiveAdmin(): Promise<User[]> {
+    const result = await db
+      .select()
+      .from(users)
+      .where(and(eq(users.role, "manager"), eq(users.status, "inactive")));
+
+    return result as User[];
+  }
+  async lockUser(id: string): Promise<boolean> {
+    const result = await db
+      .update(users)
+      .set({
+        status: "inactive",
+        updated_at: new Date(),
+      })
+      .where(eq(users.id, id))
+      .returning();
+
+    return result.length > 0;
+  }
+  async unlockUser(id: string): Promise<boolean> {
+    const result = await db
+      .update(users)
+      .set({
+        status: "active",
+        updated_at: new Date(),
+      })
+      .where(eq(users.id, id))
+      .returning();
+
+    return result.length > 0;
   }
 }

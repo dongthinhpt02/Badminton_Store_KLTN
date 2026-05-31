@@ -77,7 +77,45 @@ export class HttpAdminController {
 
     return successResponse(data, ctx);
   }
-
+  private async getAllUser(ctx: Context) {
+    const data = await this.userService.getAllUserAdmin();
+    return successResponse(data, ctx);
+  }
+  private async getAllUserActiveAdmin(ctx: Context) {
+    const data = await this.userService.getAllUserActiveAdmin();
+    return successResponse(data, ctx);
+  }
+  private async getAllUserInactiveAdmin(ctx: Context) {
+    const data = await this.userService.getAllUserInactiveAdmin();
+    return successResponse(data, ctx);
+  }
+  private async getAllManager(ctx: Context) {
+    const data = await this.userService.getAllManager();
+    return successResponse(data, ctx);
+  }
+  private async getAllManagerActive(ctx: Context) {
+    const data = await this.userService.getAllManagerActiveAdmin();
+    return successResponse(data, ctx);
+  }
+  private async getAllManagerInactive(ctx: Context) {
+    const data = await this.userService.getAllManagerInactiveAdmin();
+    return successResponse(data, ctx);
+  }
+  private async lockUser(ctx: Context) {
+    const id = ctx.query.id;
+    const data = await this.userService.lockUser(id);
+    return successResponse(data, ctx);
+  }
+  private async unlockUser(ctx: Context) {
+    const id = ctx.query.id;
+    const data = await this.userService.unlockUser(id);
+    return successResponse(data, ctx);
+  }
+  private async getUserById(ctx: Context) {
+    const id = ctx.query.id;
+    const data = await this.userService.getProfile(id);
+    return successResponse(data, ctx);
+  }
   // ********************* category ********************* //
   private async insertCate(ctx: Context) {
     const form = ctx.body as ICreateCateForm;
@@ -777,7 +815,16 @@ export class HttpAdminController {
 
       .derive(mdlFactory.auth)
       .post("/signup-manager", this.signupManager.bind(this))
-      .get("/renew", this.renewTokenAdmin.bind(this));
+      .get("/renew", this.renewTokenAdmin.bind(this))
+
+      .get("/user", this.getAllUser.bind(this))
+      .get("/user/active", this.getAllUserActiveAdmin.bind(this))
+      .get("/user/inactive", this.getAllUserInactiveAdmin.bind(this))
+      .get("/manager", this.getAllManager.bind(this))
+      .get("/manager/active", this.getAllManagerActive.bind(this))
+      .get("/manager/inactive", this.getAllManagerInactive.bind(this))
+      .put("/lock-user", this.lockUser.bind(this))
+      .put("/restore-user", this.unlockUser.bind(this));
     const cateRoutes = new Elysia({ prefix: "/cate" })
       .derive(mdlFactory.auth)
       .get("", this.getAllCate.bind(this))
@@ -788,8 +835,8 @@ export class HttpAdminController {
       .post("/create", this.insertCate.bind(this))
       .put("/update", this.updateCate.bind(this))
       .put("/delete", this.deleteCate.bind(this))
-      .put("/restore", this.restoreCate.bind(this));
-
+      .put("/restore", this.restoreCate.bind(this))
+      .get("/search/id", this.getUserById.bind(this));
     const brandRoutes = new Elysia({ prefix: "/brand" })
       .derive(mdlFactory.auth)
       .get("", this.getAllBrand.bind(this))

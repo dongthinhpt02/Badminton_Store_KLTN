@@ -12,6 +12,7 @@ import {
   IUserCondForm,
   User,
 } from "../model";
+import { getTableColumns } from "drizzle-orm";
 
 export interface IUserRepository {
   insert: (user: User) => Promise<User>;
@@ -61,6 +62,15 @@ export interface IUserService {
   renewTokenManager: (oldRefreshToken: string) => Promise<IAuthen>;
 
   logout: (refreshToken: string) => Promise<boolean>;
+
+  getAllUserAdmin(): Promise<User[]>;
+  getAllUserActiveAdmin(): Promise<User[]>;
+  getAllUserInactiveAdmin(): Promise<User[]>;
+  getAllManager(): Promise<User[]>;
+  getAllManagerActiveAdmin(): Promise<User[]>;
+  getAllManagerInactiveAdmin(): Promise<User[]>;
+  lockUser(id: string): Promise<boolean>;
+  unlockUser(id: string): Promise<boolean>;
 
   //   signupAdmin(form: ISignupForm): Promise<IAuthen>;
   //   signupShipper(form: ISignupForm): Promise<IAuthen>;

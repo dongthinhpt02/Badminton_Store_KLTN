@@ -18,6 +18,8 @@ import { setupProductItemModule } from "../module/productitem";
 import { setupPaymentModule } from "../module/payment";
 import { setupCartModule } from "../module/cart";
 import { setupOrderModule } from "../module/order";
+import setupManagerMiddlewares from "./shared/middleware/manager";
+import { setupManagerModule } from "../module/manager";
 // import testDB from "./testdb";
 async function bootServer(port: number) {
   // await testDB();
@@ -27,6 +29,9 @@ async function bootServer(port: number) {
 
   const sctxadmin = {
     mdlFactory: setupAdminMiddlewares(),
+  };
+  const sctxmanager = {
+    mdlFactory: setupManagerMiddlewares(),
   };
 
   const userModule = setupUserModule(sctx);
@@ -44,6 +49,7 @@ async function bootServer(port: number) {
   const orderModule = setupOrderModule(sctx);
 
   const adminModule = setupAdminModule(sctxadmin);
+  const managerModule = setupManagerModule(sctxmanager);
 
   app.use(userModule);
   app.use(imagekitModule);
@@ -60,6 +66,7 @@ async function bootServer(port: number) {
   app.use(orderModule);
 
   app.use(adminModule);
+  app.use(managerModule);
 
   app.use(swagger());
 
