@@ -72,6 +72,8 @@ export interface IUserService {
   lockUser(id: string): Promise<boolean>;
   unlockUser(id: string): Promise<boolean>;
 
+  googleLogin(credential: string): Promise<IAuthen>;
+
   //   signupAdmin(form: ISignupForm): Promise<IAuthen>;
   //   signupShipper(form: ISignupForm): Promise<IAuthen>;
   //   signupManager(form: ISignupForm): Promise<IAuthen>;

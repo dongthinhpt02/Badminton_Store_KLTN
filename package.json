@@ -27,7 +27,7 @@
     "elysia-helmet": "^2.0.0",
     "express": "^5.1.0",
     "express-session": "^1.18.1",
-    "google-auth-library": "^9.15.1",
+    "google-auth-library": "^10.6.2",
     "googleapis": "^148.0.0",
     "helmet": "^8.1.0",
     "imagekit": "^6.0.0",

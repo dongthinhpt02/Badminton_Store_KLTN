@@ -5,40 +5,6 @@ export interface IAuthen {
   access_token: string;
   refresh_token: string;
 }
-// export const userStatusEnum = pgEnum("user_status", [
-//   "active",
-//   "inactive",
-// ]);
-
-// // enum cho role
-// export const userRoleEnum = pgEnum("user_role", [
-//   "user",
-//   "admin",
-//   "manager",
-// ]);
-// export const users = pgTable("users", {
-//   id: uuid("id").defaultRandom().primaryKey(),
-
-//   fullname: text("fullname").notNull(),
-//   email: text("email").notNull().unique(),
-//   password: text("password").notNull(),
-//   username: text("username").notNull().unique(),
-
-//   createdAt: timestamp("created_at").defaultNow().notNull(),
-//   updatedAt: timestamp("updated_at"),
-//   deletedAt: timestamp("deleted_at"),
-//   restoredAt: timestamp("restored_at"),
-
-//   status: userStatusEnum("status").default("active").notNull(),
-//   role: userRoleEnum("role").default("user"),
-
-//   emailVerifyToken: text("email_verify_token"),
-//   forgotPasswordToken: text("forgot_password_token"),
-
-//   bio: text("bio"),
-//   avatar: text("avatar"),
-// });
-// export type User = typeof users.$inferSelect;
 import { z } from "zod";
 
 export const userSchema = z.object({

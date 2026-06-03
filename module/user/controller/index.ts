@@ -16,6 +16,7 @@ import { ErrTokenInvalid } from "../../../src/shared/utils/error";
 import { sendResetPasswordEmail } from "../../../src/shared/utils/mailer";
 import appConfig from "../../../src/shared/common/config";
 import logger from "../../../src/shared/utils/logger";
+import { googleLoginSchema } from "../model/google";
 
 export class HttpUserController {
   constructor(private readonly service: IUserService) {}
@@ -99,6 +100,13 @@ export class HttpUserController {
     const data = await this.service.changePassword(token, form);
     return successResponse(data, ctx);
   }
+  private async googleLogin(ctx: Context) {
+    const body = googleLoginSchema.parse(ctx.body);
+
+    const data = await this.service.googleLogin(body.credential);
+
+    return successResponse(data, ctx);
+  }
   getRoutes(mdlFactory: MdlFactory) {
     const module = new Elysia();
     const usersRoute = new Elysia({ prefix: "/users" })
@@ -107,12 +115,15 @@ export class HttpUserController {
       .post("/request-reset-password", this.sendEmailToResetPassword.bind(this))
       .post("/reset-password", this.resetPassword.bind(this))
 
+      .post("/login/google", this.googleLogin.bind(this))
+
       .derive(mdlFactory.auth)
       .get("/renew", this.renewToken.bind(this))
       .delete("/logout", this.logout.bind(this))
       .get("/profile", this.getProfile.bind(this))
       .put("/update", this.updateUser.bind(this))
       .put("/update/address", this.updateAddress.bind(this));
+
     module.use(usersRoute);
     return module;
   }

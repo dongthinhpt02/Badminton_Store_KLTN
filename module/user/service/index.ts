@@ -26,9 +26,12 @@ import {
 } from "../model/error";
 import { eq, or, and } from "drizzle-orm";
 import { StringValue } from "ms";
+import { OAuth2Client } from "google-auth-library";
+import { googleClient } from "../../../src/shared/common/google";
 
 export class UserService implements IUserService {
   constructor(private repository: IUserRepository) {}
+
   async login(form: ILoginForm): Promise<IAuthen> {
     const hashedPassword = hashPassword(form.password);
 
@@ -604,5 +607,73 @@ export class UserService implements IUserService {
       .returning();
 
     return result.length > 0;
+  }
+  async googleLogin(credential: string): Promise<IAuthen> {
+    const ticket = await googleClient.verifyIdToken({
+      idToken: credential,
+      audience: appConfig.google.googleClientId,
+    });
+
+    const payload = ticket.getPayload();
+
+    if (!payload?.email) {
+      throw new Error("Google email not found");
+    }
+
+    let user = await this.repository.findByCond({
+      email: payload.email,
+    });
+
+    // chưa tồn tại thì tự tạo account
+    if (!user) {
+      const inserted = await db
+        .insert(users)
+        .values({
+          fullname: payload.name ?? "",
+          username:
+            payload.email.split("@")[0] + Math.floor(Math.random() * 10000),
+
+          email: payload.email,
+
+          password: "",
+
+          role: "user",
+          status: "active",
+
+          avatar: null,
+        })
+        .returning();
+
+      user = inserted[0];
+
+      await db.insert(cart).values({
+        userId: user.id,
+        totalPrice: 0,
+        totalQuantity: 0,
+      });
+    }
+
+    const [access_token, refresh_token] = await Promise.all([
+      this.repository.generateToken(
+        user.id,
+        TokenType.AccessToken,
+        appConfig.jwt.accessTokenExpiresIn,
+      ),
+
+      this.repository.generateToken(
+        user.id,
+        TokenType.RefreshToken,
+        appConfig.jwt.refreshTokenExpiresIn,
+      ),
+    ]);
+
+    await db.insert(refreshToken).values({
+      token: refresh_token,
+    });
+
+    return {
+      access_token,
+      refresh_token,
+    };
   }
 }
