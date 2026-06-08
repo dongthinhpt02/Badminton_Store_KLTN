@@ -6,7 +6,7 @@ import { helmet } from "elysia-helmet";
 import swagger from "@elysiajs/swagger";
 
 function buildApp() {
-  const app = new Elysia({ aot: false });
+  const app = new Elysia({ aot: true });
 
   app.use(cors({ origin: appConfig.app.corsWhiteList }));
   // app.use(

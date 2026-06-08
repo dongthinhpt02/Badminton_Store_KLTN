@@ -24,6 +24,8 @@ import { ICreateImportForm } from "../../import/model";
 import { ICreateImportDetailForm } from "../../importdetail/model";
 import { UpdateDeliveredOrderForm } from "../../order/model";
 import { IStoreService } from "../../store/interface";
+import { IConservationService } from "../../conservation/interface";
+import { sendMessageSchema } from "../../conservation/model";
 
 export class HttpManagerController {
   constructor(
@@ -40,6 +42,7 @@ export class HttpManagerController {
     private readonly importService: ImportService,
     private readonly importDetailService: ImportDetailService,
     private readonly storeService: IStoreService,
+    private readonly conservationService: IConservationService,
   ) {}
   // ********************* user ********************* //
   private async getAllUserActive(ctx: Context) {
@@ -355,6 +358,44 @@ export class HttpManagerController {
     const data = await this.storeService.getActiveByAdmin();
     return successResponse(data, ctx);
   }
+  // ********************* conservation ********************* //
+  private async getAllConservationByManagerId(ctx: AuthContext) {
+    const userId = ctx.decoded.sub;
+    const data =
+      await this.conservationService.getConversationByManagerId(userId);
+    return successResponse(data, ctx);
+  }
+  private async getAllWaitingConservation(ctx: Context) {
+    const data = await this.conservationService.getAllWaitingConversations();
+    return successResponse(data, ctx);
+  }
+  private async assignManager(ctx: AuthContext) {
+    const conservationId = ctx.query.conservationId;
+    const managerId = ctx.decoded.sub;
+    const data = await this.conservationService.assignManager(
+      conservationId,
+      managerId,
+    );
+
+    console.log("Assigned manager controller:", data);
+    return successResponse(data, ctx);
+  }
+  private async sendMessageByManager(ctx: AuthContext) {
+    const senderId = ctx.decoded.sub;
+    const conservationId = ctx.query.conservationId;
+
+    const form = sendMessageSchema.parse(ctx.body);
+
+    const data = await this.conservationService.sendMessage(
+      conservationId,
+      senderId,
+      "manager",
+      form.content,
+    );
+
+    return successResponse(data, ctx);
+  }
+
   getRoutes(mdlFactory: MdlFactory) {
     const module = new Elysia({ prefix: "/manager" })
       .derive(mdlFactory.auth)
@@ -441,7 +482,14 @@ export class HttpManagerController {
       "",
       this.getStore.bind(this),
     );
+    const conservationRoutes = new Elysia({ prefix: "/conservation" })
+      .derive(mdlFactory.auth)
+      .get("/by-manager-id", this.getAllConservationByManagerId.bind(this))
+      .get("/waiting", this.getAllWaitingConservation.bind(this))
+      .post("/assign-manager", this.assignManager.bind(this))
+      .post("/send-message", this.sendMessageByManager.bind(this));
 
+    module.use(conservationRoutes);
     module.use(storeRoutes);
     module.use(importRoutes);
     module.use(importDetailRoutes);
