@@ -6,6 +6,6 @@ export const setSocketServer = (server: Server) => {
   appServer = server;
 };
 
-export const publishConversation = (conversationId: string, data: any) => {
-  appServer?.publish(`conversation:${conversationId}`, JSON.stringify(data));
+export const publishConservation = (conservationId: string, data: any) => {
+  appServer?.publish(`conservation:${conservationId}`, JSON.stringify(data));
 };

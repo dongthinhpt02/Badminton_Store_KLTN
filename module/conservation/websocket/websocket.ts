@@ -7,7 +7,7 @@ import Elysia from "elysia";
 //     const data = typeof message === "string" ? JSON.parse(message) : message;
 
 //     if (data.type === "join") {
-//       ws.subscribe(`conversation:${data.conversationId}`);
+//       ws.subscribe(`conservation:${data.conservationId}`);
 //     }
 //   },
 // });
@@ -18,9 +18,9 @@ export const conservationSocket = new Elysia().ws("/ws/conservation", {
     const data = typeof message === "string" ? JSON.parse(message) : message;
 
     if (data.type === "join") {
-      console.log("SUBSCRIBE:", `conversation:${data.conversationId}`);
+      console.log("SUBSCRIBE:", `conservation:${data.conservationId}`);
 
-      ws.subscribe(`conversation:${data.conversationId}`);
+      ws.subscribe(`conservation:${data.conservationId}`);
     }
   },
 });

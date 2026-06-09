@@ -7,19 +7,19 @@ import { sendMessageSchema } from "../model";
 
 export class HttpConservationController {
   constructor(private conservationService: IConservationService) {}
-  private async createConversation(ctx: AuthContext) {
+  private async createConservation(ctx: AuthContext) {
     const userId = ctx.decoded.sub;
-    const data = await this.conservationService.createConversation(userId);
+    const data = await this.conservationService.createConservation(userId);
     return successResponse(data, ctx);
   }
-  private async getConversationById(ctx: AuthContext) {
+  private async getConservationById(ctx: AuthContext) {
     const id = ctx.query.conservationId;
-    const data = await this.conservationService.getConversationById(id);
+    const data = await this.conservationService.getConservationById(id);
     return successResponse(data, ctx);
   }
-  private async getConversationByUserId(ctx: AuthContext) {
+  private async getConservationByUserId(ctx: AuthContext) {
     const userId = ctx.decoded.sub;
-    const data = await this.conservationService.getConversationByUserId(userId);
+    const data = await this.conservationService.getConservationByUserId(userId);
     return successResponse(data, ctx);
   }
   private async sendMessage(ctx: AuthContext) {
@@ -42,21 +42,21 @@ export class HttpConservationController {
     const data = await this.conservationService.getMessages(conservationId);
     return successResponse(data, ctx);
   }
-  private async closeConversation(ctx: AuthContext) {
+  private async closeConservation(ctx: AuthContext) {
     const conservationId = ctx.query.conservationId;
     const data =
-      await this.conservationService.closeConversation(conservationId);
+      await this.conservationService.closeConservation(conservationId);
     return successResponse(data, ctx);
   }
   getRoutes(mdlFactory: MdlFactory) {
     const module = new Elysia({ prefix: "/conservation" })
       .derive(mdlFactory.auth)
-      .post("/create", this.createConversation.bind(this))
-      .get("/by-id", this.getConversationById.bind(this))
-      .get("/by-user-id", this.getConversationByUserId.bind(this))
+      .post("/create", this.createConservation.bind(this))
+      .get("/by-id", this.getConservationById.bind(this))
+      .get("/by-user-id", this.getConservationByUserId.bind(this))
       .post("/send-message", this.sendMessage.bind(this))
       .get("/messages", this.getMessages.bind(this))
-      .post("/close", this.closeConversation.bind(this));
+      .post("/close", this.closeConservation.bind(this));
 
     return module;
   }

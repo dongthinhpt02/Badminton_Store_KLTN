@@ -27,7 +27,7 @@ import {
   conservationSocketTest1,
 } from "../module/conservation/websocket/websocket";
 import {
-  publishConversation,
+  publishConservation,
   setSocketServer,
 } from "../module/conservation/websocket";
 
@@ -87,7 +87,7 @@ async function bootServer(port: number) {
   app.use(managerModule);
 
   app.get("/test-publish", () => {
-    publishConversation("3fc775db-8652-4027-b518-9a74e3f20fdb", {
+    publishConservation("3fc775db-8652-4027-b518-9a74e3f20fdb", {
       type: "new_message",
       data: {
         content: "hello websocket",

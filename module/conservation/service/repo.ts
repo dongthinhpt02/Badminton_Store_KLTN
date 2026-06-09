@@ -1,72 +1,72 @@
 import { db } from "../../../src/shared/common/neon";
 import {
-  conversations,
+  conservations,
   messages,
 } from "../../../src/shared/common/neon/schema";
-import { ConversationStatus, IConservationRepository } from "../interface";
-import { Conversation, Message } from "../model";
+import { ConservationStatus, IConservationRepository } from "../interface";
+import { Conservation, Message } from "../model";
 import { and, eq, gte, lte, sql, desc, isNull } from "drizzle-orm";
 
 export class ConservationRepo implements IConservationRepository {
-  async createConversation(userId: string): Promise<Conversation> {
+  async createConservation(userId: string): Promise<Conservation> {
     const result = await db
-      .insert(conversations)
+      .insert(conservations)
       .values({
         userId,
-        status: ConversationStatus.WAITING,
+        status: ConservationStatus.WAITING,
         created_at: new Date(),
       })
       .returning();
     return result[0];
   }
-  async getConversationById(
-    conversationId: string,
-  ): Promise<Conversation | null> {
+  async getConservationById(
+    conservationId: string,
+  ): Promise<Conservation | null> {
     const result = await db
       .select()
-      .from(conversations)
-      .where(eq(conversations.id, conversationId));
+      .from(conservations)
+      .where(eq(conservations.id, conservationId));
     return result[0] || null;
   }
-  async getConversationByUserId(
+  async getConservationByUserId(
     userId: string,
-  ): Promise<Conversation[] | null> {
+  ): Promise<Conservation[] | null> {
     const result = await db
       .select()
-      .from(conversations)
-      .where(eq(conversations.userId, userId));
+      .from(conservations)
+      .where(eq(conservations.userId, userId));
     return result;
   }
-  async getConversationByManagerId(
+  async getConservationByManagerId(
     managerId: string,
-  ): Promise<Conversation[] | null> {
+  ): Promise<Conservation[] | null> {
     const result = await db
       .select()
-      .from(conversations)
-      .where(eq(conversations.managerId, managerId));
+      .from(conservations)
+      .where(eq(conservations.managerId, managerId));
     return result;
   }
-  async getWaitingConversations(): Promise<Conversation[]> {
+  async getWaitingConservations(): Promise<Conservation[]> {
     const result = await db
       .select()
-      .from(conversations)
-      .where(isNull(conversations.managerId));
-    return result as Conversation[];
+      .from(conservations)
+      .where(isNull(conservations.managerId));
+    return result as Conservation[];
   }
   async assignManager(
-    conversationId: string,
+    conservationId: string,
     managerId: string,
-  ): Promise<Conversation> {
+  ): Promise<Conservation> {
     const result = await db
-      .update(conversations)
+      .update(conservations)
       .set({
         managerId,
-        status: ConversationStatus.CHATTING,
+        status: ConservationStatus.CHATTING,
       })
       .where(
         and(
-          eq(conversations.status, ConversationStatus.WAITING),
-          eq(conversations.id, conversationId),
+          eq(conservations.status, ConservationStatus.WAITING),
+          eq(conservations.id, conservationId),
         ),
       )
       .returning();
@@ -76,33 +76,28 @@ export class ConservationRepo implements IConservationRepository {
     return result[0];
   }
   async updateLastMessage(
-    conversationId: string,
+    conservationId: string,
     content: string,
   ): Promise<void> {
     await db
-      .update(conversations)
+      .update(conservations)
       .set({
         lastMessage: content,
         lastMessageAt: new Date(),
         updated_at: new Date(),
       })
-      .where(eq(conversations.id, conversationId));
+      .where(eq(conservations.id, conservationId));
   }
-  async closeConversation(conversationId: string): Promise<Conversation> {
+  async closeConservation(conservationId: string): Promise<Conservation> {
     const result = await db
-      .update(conversations)
-      .set({ status: ConversationStatus.CLOSED, closed_at: new Date() })
-      .where(
-        and(
-          eq(conversations.status, ConversationStatus.CHATTING),
-          eq(conversations.id, conversationId),
-        ),
-      )
+      .update(conservations)
+      .set({ status: ConservationStatus.CLOSED, closed_at: new Date() })
+      .where(and(eq(conservations.id, conservationId)))
       .returning();
     return result[0];
   }
   async createMessage(
-    conversationId: string,
+    conservationId: string,
     senderId: string,
     senderRole: "user" | "manager",
     content: string,
@@ -110,7 +105,7 @@ export class ConservationRepo implements IConservationRepository {
     const result = await db
       .insert(messages)
       .values({
-        conversationId,
+        conservationId,
         senderId,
         senderRole,
         content,
@@ -118,53 +113,53 @@ export class ConservationRepo implements IConservationRepository {
       .returning();
     return result[0];
   }
-  async getMessages(conversationId: string): Promise<Message[]> {
+  async getMessages(conservationId: string): Promise<Message[]> {
     const result = await db
       .select()
       .from(messages)
-      .where(eq(messages.conversationId, conversationId))
+      .where(eq(messages.conservationId, conservationId))
       .orderBy(desc(messages.created_at));
     return result as Message[];
   }
   //Admin
-  async getAllConversations(): Promise<Conversation[]> {
+  async getAllConservations(): Promise<Conservation[]> {
     const result = await db
       .select()
-      .from(conversations)
-      .orderBy(desc(conversations.created_at));
-    return result as Conversation[];
+      .from(conservations)
+      .orderBy(desc(conservations.created_at));
+    return result as Conservation[];
   }
-  async getAllWaitingConversations(): Promise<Conversation[]> {
+  async getAllWaitingConservations(): Promise<Conservation[]> {
     const result = await db
       .select()
-      .from(conversations)
-      .where(eq(conversations.status, ConversationStatus.WAITING))
-      .orderBy(desc(conversations.created_at));
-    return result as Conversation[];
+      .from(conservations)
+      .where(eq(conservations.status, ConservationStatus.WAITING))
+      .orderBy(desc(conservations.created_at));
+    return result as Conservation[];
   }
-  async getAllChattingConversations(): Promise<Conversation[]> {
+  async getAllChattingConservations(): Promise<Conservation[]> {
     const result = await db
       .select()
-      .from(conversations)
-      .where(eq(conversations.status, ConversationStatus.CHATTING))
-      .orderBy(desc(conversations.created_at));
-    return result as Conversation[];
+      .from(conservations)
+      .where(eq(conservations.status, ConservationStatus.CHATTING))
+      .orderBy(desc(conservations.created_at));
+    return result as Conservation[];
   }
-  async getAllClosedConversations(): Promise<Conversation[]> {
+  async getAllClosedConservations(): Promise<Conservation[]> {
     const result = await db
       .select()
-      .from(conversations)
-      .where(eq(conversations.status, ConversationStatus.CLOSED))
-      .orderBy(desc(conversations.created_at));
-    return result as Conversation[];
+      .from(conservations)
+      .where(eq(conservations.status, ConservationStatus.CLOSED))
+      .orderBy(desc(conservations.created_at));
+    return result as Conservation[];
   }
-  async getConversationMessagesForAdmin(
-    conversationId: string,
+  async getConservationMessagesForAdmin(
+    conservationId: string,
   ): Promise<Message[]> {
     const result = await db
       .select()
       .from(messages)
-      .where(eq(messages.conversationId, conversationId))
+      .where(eq(messages.conservationId, conservationId))
       .orderBy(desc(messages.created_at));
     return result as Message[];
   }

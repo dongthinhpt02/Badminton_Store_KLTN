@@ -362,11 +362,11 @@ export class HttpManagerController {
   private async getAllConservationByManagerId(ctx: AuthContext) {
     const userId = ctx.decoded.sub;
     const data =
-      await this.conservationService.getConversationByManagerId(userId);
+      await this.conservationService.getConservationByManagerId(userId);
     return successResponse(data, ctx);
   }
   private async getAllWaitingConservation(ctx: Context) {
-    const data = await this.conservationService.getAllWaitingConversations();
+    const data = await this.conservationService.getAllWaitingConservations();
     return successResponse(data, ctx);
   }
   private async assignManager(ctx: AuthContext) {

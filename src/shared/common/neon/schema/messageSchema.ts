@@ -1,16 +1,16 @@
 import { pgTable, uuid, text, timestamp, pgEnum } from "drizzle-orm/pg-core";
 
 import { users } from "./userSchema";
-import { conversations } from "./conservationSchema";
+import { conservations } from "./conservationSchema";
 
 export const senderRoleEnum = pgEnum("sender_role", ["user", "manager"]);
 
 export const messages = pgTable("messages", {
   id: uuid("id").defaultRandom().primaryKey(),
 
-  conversationId: uuid("conversation_id")
+  conservationId: uuid("conservation_id")
     .notNull()
-    .references(() => conversations.id),
+    .references(() => conservations.id),
 
   senderId: uuid("sender_id")
     .notNull()

@@ -1,79 +1,79 @@
 import { IConservationRepository, IConservationService } from "../interface";
-import { ConversationGateway } from "../websocket/gateway";
+import { ConservationGateway } from "../websocket/gateway";
 
 export class ConservationService implements IConservationService {
   constructor(private conservationRepo: IConservationRepository) {}
 
-  async createConversation(userId: string) {
-    return this.conservationRepo.createConversation(userId);
+  async createConservation(userId: string) {
+    return this.conservationRepo.createConservation(userId);
   }
-  async getConversationById(conversationId: string) {
-    return this.conservationRepo.getConversationById(conversationId);
+  async getConservationById(conservationId: string) {
+    return this.conservationRepo.getConservationById(conservationId);
   }
-  async getConversationByUserId(userId: string) {
-    return this.conservationRepo.getConversationByUserId(userId);
+  async getConservationByUserId(userId: string) {
+    return this.conservationRepo.getConservationByUserId(userId);
   }
-  async getConversationByManagerId(managerId: string) {
-    return this.conservationRepo.getConversationByManagerId(managerId);
+  async getConservationByManagerId(managerId: string) {
+    return this.conservationRepo.getConservationByManagerId(managerId);
   }
 
-  async assignManager(conversationId: string, managerId: string) {
+  async assignManager(conservationId: string, managerId: string) {
     const data = await this.conservationRepo.assignManager(
-      conversationId,
+      conservationId,
       managerId,
     );
-    // ConversationGateway.publishMessage(conversationId, {
+    // ConservationGateway.publishMessage(conservationId, {
     //   type: "assigned_manager",
     //   data,
     // });
-    // return this.conservationRepo.assignManager(conversationId, managerId);
+    // return this.conservationRepo.assignManager(conservationId, managerId);
     console.log("Assigned manager:", data);
     return data;
   }
 
-  async closeConversation(conversationId: string) {
-    return this.conservationRepo.closeConversation(conversationId);
+  async closeConservation(conservationId: string) {
+    return this.conservationRepo.closeConservation(conservationId);
   }
   async sendMessage(
-    conversationId: string,
+    conservationId: string,
     senderId: string,
     senderRole: "user" | "manager",
     content: string,
   ) {
     const message = await this.conservationRepo.createMessage(
-      conversationId,
+      conservationId,
       senderId,
       senderRole,
       content,
     );
 
-    await this.conservationRepo.updateLastMessage(conversationId, content);
+    await this.conservationRepo.updateLastMessage(conservationId, content);
 
-    ConversationGateway.publishMessage(conversationId, message);
+    ConservationGateway.publishMessage(conservationId, message);
 
     return message;
   }
-  async getMessages(conversationId: string) {
-    return this.conservationRepo.getMessages(conversationId);
+  async getMessages(conservationId: string) {
+    return this.conservationRepo.getMessages(conservationId);
   }
-  async getWaitingConversations() {
-    return this.conservationRepo.getWaitingConversations();
+  async getWaitingConservations() {
+    return this.conservationRepo.getWaitingConservations();
   }
-  async getAllConversations() {
-    return this.conservationRepo.getAllConversations();
+  async getAllConservations() {
+    return this.conservationRepo.getAllConservations();
   }
-  async getAllWaitingConversations() {
-    return this.conservationRepo.getAllWaitingConversations();
+  async getAllWaitingConservations() {
+    return this.conservationRepo.getAllWaitingConservations();
   }
-  async getAllChattingConversations() {
-    return this.conservationRepo.getAllChattingConversations();
+  async getAllChattingConservations() {
+    return this.conservationRepo.getAllChattingConservations();
   }
-  async getAllClosedConversations() {
-    return this.conservationRepo.getAllClosedConversations();
+  async getAllClosedConservations() {
+    return this.conservationRepo.getAllClosedConservations();
   }
-  async getConversationMessagesForAdmin(conversationId: string) {
-    return this.conservationRepo.getConversationMessagesForAdmin(
-      conversationId,
+  async getConservationMessagesForAdmin(conservationId: string) {
+    return this.conservationRepo.getConservationMessagesForAdmin(
+      conservationId,
     );
   }
 }

@@ -813,25 +813,25 @@ export class HttpAdminController {
   }
   // ********************* conservation ********************* //
   private async getAllConservation(ctx: Context) {
-    const data = await this.conservationService.getAllConversations();
+    const data = await this.conservationService.getAllConservations();
     return successResponse(data, ctx);
   }
   private async getAllWaitingConservation(ctx: Context) {
-    const data = await this.conservationService.getAllWaitingConversations();
+    const data = await this.conservationService.getAllWaitingConservations();
     return successResponse(data, ctx);
   }
   private async getAllChattingConservation(ctx: Context) {
-    const data = await this.conservationService.getAllChattingConversations();
+    const data = await this.conservationService.getAllChattingConservations();
     return successResponse(data, ctx);
   }
   private async getAllClosedConservation(ctx: Context) {
-    const data = await this.conservationService.getAllClosedConversations();
+    const data = await this.conservationService.getAllClosedConservations();
     return successResponse(data, ctx);
   }
   private async getConservationMessageForAdmin(ctx: Context) {
     const conservationId = ctx.query.conservationId;
     const data =
-      await this.conservationService.getConversationMessagesForAdmin(
+      await this.conservationService.getConservationMessagesForAdmin(
         conservationId,
       );
     return successResponse(data, ctx);

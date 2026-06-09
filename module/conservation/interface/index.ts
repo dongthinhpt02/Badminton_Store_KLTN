@@ -1,6 +1,6 @@
-import { Conversation, Message } from "../model";
+import { Conservation, Message } from "../model";
 
-export enum ConversationStatus {
+export enum ConservationStatus {
   WAITING = "waiting",
   CHATTING = "chatting",
   CLOSED = "closed",
@@ -8,83 +8,83 @@ export enum ConversationStatus {
 
 export interface IConservationRepository {
   // User + Manager
-  createConversation(userId: string): Promise<Conversation>;
+  createConservation(userId: string): Promise<Conservation>;
 
-  getConversationById(conversationId: string): Promise<Conversation | null>;
+  getConservationById(conservationId: string): Promise<Conservation | null>;
 
-  getConversationByUserId(userId: string): Promise<Conversation[] | null>;
+  getConservationByUserId(userId: string): Promise<Conservation[] | null>;
 
-  getConversationByManagerId(managerId: string): Promise<Conversation[] | null>;
+  getConservationByManagerId(managerId: string): Promise<Conservation[] | null>;
 
-  getWaitingConversations(): Promise<Conversation[]>;
+  getWaitingConservations(): Promise<Conservation[]>;
 
   assignManager(
-    conversationId: string,
+    conservationId: string,
     managerId: string,
-  ): Promise<Conversation>;
+  ): Promise<Conservation>;
 
-  closeConversation(conversationId: string): Promise<Conversation>;
+  closeConservation(conservationId: string): Promise<Conservation>;
 
-  updateLastMessage(conversationId: string, content: string): Promise<void>;
+  updateLastMessage(conservationId: string, content: string): Promise<void>;
 
   createMessage(
-    conversationId: string,
+    conservationId: string,
     senderId: string,
     senderRole: "user" | "manager",
     content: string,
   ): Promise<Message>;
 
-  getMessages(conversationId: string): Promise<Message[]>;
+  getMessages(conservationId: string): Promise<Message[]>;
 
   // Admin
-  getAllConversations(): Promise<Conversation[]>;
+  getAllConservations(): Promise<Conservation[]>;
 
-  getAllWaitingConversations(): Promise<Conversation[]>;
+  getAllWaitingConservations(): Promise<Conservation[]>;
 
-  getAllChattingConversations(): Promise<Conversation[]>;
+  getAllChattingConservations(): Promise<Conservation[]>;
 
-  getAllClosedConversations(): Promise<Conversation[]>;
+  getAllClosedConservations(): Promise<Conservation[]>;
 
-  getConversationMessagesForAdmin(conversationId: string): Promise<Message[]>;
+  getConservationMessagesForAdmin(conservationId: string): Promise<Message[]>;
 }
 
 export interface IConservationService {
-  createConversation(userId: string): Promise<Conversation>;
+  createConservation(userId: string): Promise<Conservation>;
 
-  getConversationById(conversationId: string): Promise<Conversation | null>;
+  getConservationById(conservationId: string): Promise<Conservation | null>;
 
-  getConversationByUserId(userId: string): Promise<Conversation[] | null>;
+  getConservationByUserId(userId: string): Promise<Conservation[] | null>;
 
-  getConversationByManagerId(managerId: string): Promise<Conversation[] | null>;
+  getConservationByManagerId(managerId: string): Promise<Conservation[] | null>;
 
-  getWaitingConversations(): Promise<Conversation[]>;
+  getWaitingConservations(): Promise<Conservation[]>;
 
   assignManager(
-    conversationId: string,
+    conservationId: string,
     managerId: string,
-  ): Promise<Conversation>;
+  ): Promise<Conservation>;
 
-  closeConversation(conversationId: string): Promise<Conversation>;
+  closeConservation(conservationId: string): Promise<Conservation>;
 
   sendMessage(
-    conversationId: string,
+    conservationId: string,
     senderId: string,
     senderRole: "user" | "manager",
     content: string,
   ): Promise<Message>;
 
-  getMessages(conversationId: string): Promise<Message[]>;
+  getMessages(conservationId: string): Promise<Message[]>;
 
-  getWaitingConversations(): Promise<Conversation[]>;
+  getWaitingConservations(): Promise<Conservation[]>;
 
   // Admin
-  getAllConversations(): Promise<Conversation[]>;
+  getAllConservations(): Promise<Conservation[]>;
 
-  getAllWaitingConversations(): Promise<Conversation[]>;
+  getAllWaitingConservations(): Promise<Conservation[]>;
 
-  getAllChattingConversations(): Promise<Conversation[]>;
+  getAllChattingConservations(): Promise<Conservation[]>;
 
-  getAllClosedConversations(): Promise<Conversation[]>;
+  getAllClosedConservations(): Promise<Conservation[]>;
 
-  getConversationMessagesForAdmin(conversationId: string): Promise<Message[]>;
+  getConservationMessagesForAdmin(conservationId: string): Promise<Message[]>;
 }

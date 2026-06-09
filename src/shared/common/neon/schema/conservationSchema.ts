@@ -2,13 +2,13 @@ import { pgTable, uuid, text, timestamp, pgEnum } from "drizzle-orm/pg-core";
 
 import { users } from "./userSchema";
 
-export const conversationStatusEnum = pgEnum("conversation_status", [
+export const conservationStatusEnum = pgEnum("conservation_status", [
   "waiting",
   "chatting",
   "closed",
 ]);
 
-export const conversations = pgTable("conversations", {
+export const conservations = pgTable("conservations", {
   id: uuid("id").defaultRandom().primaryKey(),
 
   userId: uuid("user_id")
@@ -17,7 +17,7 @@ export const conversations = pgTable("conversations", {
 
   managerId: uuid("manager_id").references(() => users.id),
 
-  status: conversationStatusEnum("status").default("waiting").notNull(),
+  status: conservationStatusEnum("status").default("waiting").notNull(),
 
   lastMessage: text("last_message"),
 

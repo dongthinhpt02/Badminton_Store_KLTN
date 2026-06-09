@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const conversationSchema = z.object({
+export const conservationSchema = z.object({
   id: z.string().uuid(),
 
   userId: z.string().uuid(),
@@ -20,37 +20,37 @@ export const conversationSchema = z.object({
   closed_at: z.date().nullable(),
 });
 
-export type Conversation = z.infer<typeof conversationSchema>;
+export type Conservation = z.infer<typeof conservationSchema>;
 
-export const createConversationSchema = conversationSchema
+export const createConservationSchema = conservationSchema
   .pick({
     userId: true,
   })
   .required();
 
-export type ICreateConversationForm = z.infer<typeof createConversationSchema>;
+export type ICreateConservationForm = z.infer<typeof createConservationSchema>;
 
-export const takeConversationSchema = conversationSchema
+export const takeConservationSchema = conservationSchema
   .pick({
     managerId: true,
   })
   .required();
 
-export type ITakeConversationForm = z.infer<typeof takeConversationSchema>;
+export type ITakeConservationForm = z.infer<typeof takeConservationSchema>;
 
-export const closeConversationSchema = conversationSchema
+export const closeConservationSchema = conservationSchema
   .pick({
     id: true,
   })
   .required();
 
-export type ICloseConversationForm = z.infer<typeof closeConversationSchema>;
+export type ICloseConservationForm = z.infer<typeof closeConservationSchema>;
 
 // ******************* Message *******************
 export const messageSchema = z.object({
   id: z.string().uuid(),
 
-  conversationId: z.string().uuid(),
+  conservationId: z.string().uuid(),
 
   senderId: z.string().uuid(),
 
