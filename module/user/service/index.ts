@@ -81,19 +81,64 @@ export class UserService implements IUserService {
       token: refresh_token,
     });
 
-    const checkCart = await db
-      .select()
-      .from(cart)
-      .where(eq(cart.userId, user.id))
-      .limit(1);
+    if (user.role === "user") {
+      const checkCart = await db
+        .select()
+        .from(cart)
+        .where(eq(cart.userId, user.id))
+        .limit(1);
 
-    if (checkCart.length === 0) {
-      await db.insert(cart).values({
-        userId: user.id,
-        totalPrice: 0,
-        totalQuantity: 0,
-      });
+      if (checkCart.length === 0) {
+        await db.insert(cart).values({
+          userId: user.id,
+          totalPrice: 0,
+          totalQuantity: 0,
+        });
+      }
     }
+    if (user.role !== "admin") {
+      const findUserSendBird = await fetch(
+        `https://api-${appConfig.SENDBIRD.applicationId}.sendbird.com/v3/users/${user.id}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "Api-Token": appConfig.SENDBIRD.apiToken,
+          },
+        },
+      );
+
+      console.log("SendBird find user response:", findUserSendBird.status);
+      if (findUserSendBird.status !== 404) {
+        const body = JSON.stringify({
+          user_id: user.id,
+          nickname: user.fullname,
+          profile_url: "",
+          profile_file: null,
+          metadata: {
+            font_preference: "times new roman",
+            font_color: "black",
+            role: user.role,
+          },
+        });
+
+        const sendBirdCreateUser = await fetch(
+          `https://api-${appConfig.SENDBIRD.applicationId}.sendbird.com/v3/users`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Api-Token": appConfig.SENDBIRD.apiToken,
+            },
+            body: body,
+          },
+        );
+
+        const data = await sendBirdCreateUser.json();
+        console.log("SendBird create user response:", data);
+      }
+    }
+
     return {
       access_token,
       refresh_token,
@@ -174,6 +219,33 @@ export class UserService implements IUserService {
       totalQuantity: 0,
     });
     console.log("👉 inserted token");
+
+    const body = JSON.stringify({
+      user_id: user.id,
+      nickname: user.fullname,
+      profile_url: "",
+      profile_file: null,
+      metadata: {
+        font_preference: "times new roman",
+        font_color: "black",
+        role: user.role,
+      },
+    });
+
+    const sendBirdCreateUser = await fetch(
+      `https://api-${appConfig.SENDBIRD.applicationId}.sendbird.com/v3/users`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Api-Token": appConfig.SENDBIRD.apiToken,
+        },
+        body: body,
+      },
+    );
+
+    const data = await sendBirdCreateUser.json();
+    console.log("SendBird create user response:", data);
 
     return {
       access_token,

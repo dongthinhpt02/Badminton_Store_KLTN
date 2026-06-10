@@ -67,6 +67,10 @@ const appConfig = {
   NEON: {
     databaseUrl: process.env.DATABASE_URL as string,
   },
+  SENDBIRD: {
+    applicationId: process.env.SENDBIRD_APPLICATION_ID as string,
+    apiToken: process.env.SENDBIRD_API_TOKEN as string,
+  },
 };
 
 export default appConfig;
