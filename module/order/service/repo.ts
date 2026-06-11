@@ -282,7 +282,7 @@ export class OrderRepo implements IOrderRepository {
       .groupBy(orders.namePayment);
 
     // Doanh thu theo tháng
-    const revenueByMonth = await db
+    const result = await db
       .select({
         year: sql<number>`extract(year from ${orders.created_at})`,
         month: sql<number>`extract(month from ${orders.created_at})`,
@@ -299,6 +299,13 @@ export class OrderRepo implements IOrderRepository {
         sql`extract(month from ${orders.created_at})`,
       );
 
+    const revenueByMonth = result.map((item) => ({
+      id: {
+        month: Number(item.month),
+        year: Number(item.year),
+      },
+      totalRevenue: Number(item.totalRevenue),
+    }));
     // Tổng sản phẩm đã bán
     const totalProductsResult = await db
       .select({
