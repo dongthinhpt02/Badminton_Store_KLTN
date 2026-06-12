@@ -272,7 +272,7 @@ export class OrderRepo implements IOrderRepository {
     const totalOrders = Number(totalOrdersResult[0]?.total ?? 0);
 
     // Doanh thu theo phương thức thanh toán
-    const revenueByPayment = await db
+    const revenueByPaymentRaw = await db
       .select({
         namePayment: orders.namePayment,
         totalRevenue: sql<number>`sum(${orders.totalCart})`,
@@ -281,6 +281,10 @@ export class OrderRepo implements IOrderRepository {
       .where(eq(orders.status, OrderStatus.COMPLETED))
       .groupBy(orders.namePayment);
 
+    const revenueByPayment = revenueByPaymentRaw.map((item) => ({
+      namePayment: item.namePayment,
+      totalRevenue: Number(item.totalRevenue),
+    }));
     // Doanh thu theo tháng
     const result = await db
       .select({
@@ -383,10 +387,28 @@ export class OrderRepo implements IOrderRepository {
       .groupBy(sql`date_trunc('year', ${orders.created_at})`)
       .orderBy(sql`date_trunc('year', ${orders.created_at})`);
 
+    const byDay = byDayRaw.map((item) => ({
+      date: item.date,
+      revenue: Number(item.revenue),
+      orderCount: Number(item.orderCount),
+    }));
+
+    const byMonth = byMonthRaw.map((item) => ({
+      date: item.date,
+      revenue: Number(item.revenue),
+      orderCount: Number(item.orderCount),
+    }));
+
+    const byYear = byYearRaw.map((item) => ({
+      date: item.date,
+      revenue: Number(item.revenue),
+      orderCount: Number(item.orderCount),
+    }));
+
     return {
-      byDay: byDayRaw,
-      byMonth: byMonthRaw,
-      byYear: byYearRaw,
+      byDay,
+      byMonth,
+      byYear,
     };
   }
   async getTopSellingProductItem(): Promise<any> {
@@ -434,7 +456,7 @@ export class OrderRepo implements IOrderRepository {
     };
   }
   async getBrandStatistics(): Promise<any[]> {
-    return await db
+    const result = await db
       .select({
         brandId: brands.id,
         nameBrand: brands.nameBrand,
@@ -450,9 +472,14 @@ export class OrderRepo implements IOrderRepository {
       .where(eq(orders.status, OrderStatus.COMPLETED))
       .groupBy(brands.id, brands.nameBrand, brands.imageBrand)
       .orderBy(desc(sql`SUM(${orderDetails.quantity})`));
+
+    return result.map((item) => ({
+      ...item,
+      totalRevenue: Number(item.totalRevenue),
+    }));
   }
   async getCategoryStatistics(): Promise<any[]> {
-    const stats = await db
+    const result = await db
       .select({
         cateId: categories.id,
         nameCate: categories.nameCate,
@@ -478,6 +505,9 @@ export class OrderRepo implements IOrderRepository {
 
       .orderBy(desc(sql`SUM(${orderDetails.quantity})`));
 
-    return stats;
+    return result.map((item) => ({
+      ...item,
+      totalRevenue: Number(item.totalRevenue),
+    }));
   }
 }
