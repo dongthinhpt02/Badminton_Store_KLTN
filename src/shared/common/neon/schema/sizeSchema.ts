@@ -12,7 +12,7 @@ export const sizes = pgTable("sizes", {
     .notNull()
     .references(() => sizeTypes.id),
 
-  nameSize: text("nameSize").notNull(),
+  nameSize: text("name_size").notNull(),
 
   status: sizeStatusEnum("status").default("active").notNull(),
 
