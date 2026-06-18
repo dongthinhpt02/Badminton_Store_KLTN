@@ -19,17 +19,17 @@ export const cartItemStatusEnum = pgEnum("cart_item_status", [
 
 export const cartItems = pgTable("cart_items", {
   id: uuid("id").primaryKey().defaultRandom(),
-  cartId: uuid("cartId")
+  cartId: uuid("cart_id")
     .notNull()
     .references(() => cart.id),
-  productItemId: uuid("productItemId")
+  productItemId: uuid("product_item_id")
     .notNull()
     .references(() => productItems.id),
-  nameProductItem: text("nameProductItem").notNull(),
+  nameProductItem: text("name_product_item").notNull(),
   price: integer("price").notNull(),
-  pricePromotion: integer("pricePromotion"),
+  pricePromotion: integer("price_promotion"),
   status: cartItemStatusEnum("status").notNull().default("untick"),
   quantity: integer("quantity").notNull(),
-  imageProductItem: text("imageProductItem").notNull(),
-  totalPriceCartItem: integer("totalPriceCartItem").notNull(),
+  imageProductItem: text("image_product_item").notNull(),
+  totalPriceCartItem: integer("total_price_cart_item").notNull(),
 });
