@@ -36,7 +36,7 @@ const appConfig = {
       "http://localhost:8081",
       "http://localhost:5173",
       "http://localhost:3000",
-      "https://badminton-accessories.vercel.app/",
+      "https://badminton-accessories.vercel.app",
       "badmintonstorekltn-production.up.railway.app",
     ],
     baseUrl: `${process.env.APP_URL}:${process.env.APP_PORT}`,
