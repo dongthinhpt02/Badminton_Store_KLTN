@@ -39,7 +39,7 @@ export class HttpUserController {
         return new Response(
           JSON.stringify({
             error: "Validation failed",
-            details: err.errors,
+            // details: err.errors,
           }),
           { status: 400 },
         );
