@@ -12,7 +12,12 @@ export const promotionSchema = z.object({
   }),
   valuePromotion: z
     .number()
-    .min(0, { message: "Giá trị khuyến mãi phải lớn hơn hoặc bằng 0" }),
+    .gt(0, {
+      message: "Giá trị khuyến mãi phải lớn hơn 0",
+    })
+    .lt(100, {
+      message: "Giá trị khuyến mãi phải nhỏ hơn 100",
+    }),
   status: z.enum(["active", "inactive"]).default("active"),
   created_at: z.date(),
   updated_at: z.date().nullable(),
