@@ -109,7 +109,7 @@ export class HttpUserController {
   }
   getRoutes(mdlFactory: MdlFactory) {
     const module = new Elysia();
-    const usersRoute = new Elysia({ prefix: "/users" })
+    const usersRoute = new Elysia({ prefix: "/user" })
       .post("/login", this.login.bind(this))
       .post("/signup", this.signup.bind(this))
       .post("/request-reset-password", this.sendEmailToResetPassword.bind(this))
