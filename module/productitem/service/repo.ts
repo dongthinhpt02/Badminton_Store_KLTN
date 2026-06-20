@@ -294,7 +294,8 @@ export class ProductItemRepo implements IProductItemRepository {
     const valuePromotion = Number(promo.valuePromotion);
 
     // pricePromotion = price - value*price
-    const finalPrice = price - valuePromotion * price;
+    const finalPrice = price - (valuePromotion / 100) * price;
+    // finalPrice = price - valuePromotion * price;
 
     // update
     const result = await db

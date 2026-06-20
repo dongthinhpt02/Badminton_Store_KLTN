@@ -656,6 +656,14 @@ export class UserService implements IUserService {
 
     return result as User[];
   }
+  async getAllUserAndManagerAdmin(): Promise<User[]> {
+    const result = await db
+      .select()
+      .from(users)
+      .where(or(eq(users.role, "user"), eq(users.role, "manager")));
+
+    return result as User[];
+  }
   async lockUser(id: string): Promise<boolean> {
     const result = await db
       .update(users)

@@ -7,6 +7,7 @@ import {
   integer,
   numeric,
 } from "drizzle-orm/pg-core";
+import { number } from "zod";
 
 export const promotionStatusEnum = pgEnum("promotion_status", [
   "active",
@@ -18,10 +19,7 @@ export const promotions = pgTable("promotions", {
 
   codePromotion: text("code_promotion").notNull().unique(),
 
-  valuePromotion: numeric("value_promotion", {
-    precision: 10,
-    scale: 2,
-  }).notNull(),
+  valuePromotion: integer("value_promotion").notNull(),
 
   status: promotionStatusEnum("status").default("active").notNull(),
 

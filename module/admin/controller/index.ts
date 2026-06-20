@@ -103,6 +103,10 @@ export class HttpAdminController {
     const data = await this.userService.getAllManagerInactiveAdmin();
     return successResponse(data, ctx);
   }
+  private async getAllUserAndManager(ctx: Context) {
+    const data = await this.userService.getAllUserAndManagerAdmin();
+    return successResponse(data, ctx);
+  }
   private async lockUser(ctx: Context) {
     const id = ctx.query.id;
     const data = await this.userService.lockUser(id);
@@ -850,6 +854,7 @@ export class HttpAdminController {
       .get("/manager", this.getAllManager.bind(this))
       .get("/manager/active", this.getAllManagerActive.bind(this))
       .get("/manager/inactive", this.getAllManagerInactive.bind(this))
+      .get("/user-and-manager", this.getAllUserAndManager.bind(this))
       .put("/lock-user", this.lockUser.bind(this))
       .put("/restore-user", this.unlockUser.bind(this));
     const cateRoutes = new Elysia({ prefix: "/cate" })

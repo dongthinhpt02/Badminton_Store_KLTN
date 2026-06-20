@@ -16,6 +16,7 @@ export class PromotionService implements IPromotionService {
     form: IUpdatePromotionForm,
   ): Promise<Promotion | null> {
     const updatedPromotion = await this.promotionRepo.update(id, form);
+
     return updatedPromotion;
   }
   async delete(id: string): Promise<boolean> {
@@ -28,10 +29,14 @@ export class PromotionService implements IPromotionService {
   }
   async getById(id: string): Promise<Promotion | null> {
     const promotion = await this.promotionRepo.findById(id);
-    return promotion;
+    if (!promotion) {
+      return null;
+    }
+    return { ...promotion, valuePromotion: promotion.valuePromotion * 100 }; //promotion;
   }
   async getByIdAdmin(id: string): Promise<Promotion | null> {
     const promotion = await this.promotionRepo.findByIdAdmin(id);
+
     return promotion;
   }
   async getByName(namePromotion: string): Promise<Promotion[] | null> {

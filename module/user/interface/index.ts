@@ -69,6 +69,9 @@ export interface IUserService {
   getAllManager(): Promise<User[]>;
   getAllManagerActiveAdmin(): Promise<User[]>;
   getAllManagerInactiveAdmin(): Promise<User[]>;
+
+  getAllUserAndManagerAdmin(): Promise<User[]>;
+
   lockUser(id: string): Promise<boolean>;
   unlockUser(id: string): Promise<boolean>;
 

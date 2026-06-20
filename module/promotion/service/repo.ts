@@ -16,11 +16,13 @@ export class PromotionRepo implements IPromotionRepository {
       .values({
         ...promotion,
         codePromotion: promotion.codePromotion.trim(),
-        valuePromotion: promotion.valuePromotion.toString().trim(),
+        valuePromotion: promotion.valuePromotion ?? 0,
+        //  valuePromotion: String(Number(promotion.valuePromotion ?? 0) / 100).toString().trim(),
         status: Status.ACTIVE,
         created_at: new Date(),
       })
       .returning();
+    console.log(result[0].valuePromotion, "valuePromotion");
     return result[0];
   }
   async update(
@@ -32,7 +34,8 @@ export class PromotionRepo implements IPromotionRepository {
       .set({
         ...form,
         codePromotion: form.codePromotion?.trim(),
-        valuePromotion: form.valuePromotion?.toString().trim(),
+        valuePromotion: form.valuePromotion ?? 0,
+        // valuePromotion: String(Number(form.valuePromotion ?? 0) / 100).toString().trim(),
         updated_at: new Date(),
       })
       .where(eq(promotions.id, id))

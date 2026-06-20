@@ -10,7 +10,9 @@ export const promotionSchema = z.object({
   codePromotion: z.string().regex(/^[\p{L}0-9 ]+$/u, {
     message: "Mã Khuyến mãi chỉ được chứa chữ cái, số và dấu cách",
   }),
-  valuePromotion: z.string(),
+  valuePromotion: z
+    .number()
+    .min(0, { message: "Giá trị khuyến mãi phải lớn hơn hoặc bằng 0" }),
   status: z.enum(["active", "inactive"]).default("active"),
   created_at: z.date(),
   updated_at: z.date().nullable(),
