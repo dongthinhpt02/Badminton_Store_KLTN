@@ -55,7 +55,7 @@ const appConfig = {
     vnpTmnCode: process.env.VNP_TMNCODE,
     vnpHashSecret: process.env.VNP_HASHSECRET,
     // vnpReturnUrl: `${process.env.APP_URL}:${process.env.APP_PORT}/payment/vnpay/return`,
-    vnpReturnUrl: `https://badminton-accessories.vercel.app/payment/vnpay/return`,
+    vnpReturnUrl: `https://badminton-accessories.vercel.app/checkout`,
     // vnpReturnUrl: `${process.env.APP_URL}:${process.env.APP_PORT}/VnPayReturn`,
     // vnpReturnUrl: `${process.env.APP_URL}:${process.env.FE_PORT}/checkout`,
   },
