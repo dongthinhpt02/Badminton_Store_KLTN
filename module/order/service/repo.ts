@@ -417,7 +417,7 @@ export class OrderRepo implements IOrderRepository {
       .select({
         productItemId: orderDetails.productItemId,
         nameProductItem: orderDetails.nameProductItem,
-        imageProductItem: orderDetails.imageProductItem,
+        // imageProductItem: orderDetails.imageProductItem,
         totalQuantitySold: sql<number>`sum(${orderDetails.quantity})::int`,
       })
       .from(orderDetails)
@@ -426,7 +426,7 @@ export class OrderRepo implements IOrderRepository {
       .groupBy(
         orderDetails.productItemId,
         orderDetails.nameProductItem,
-        orderDetails.imageProductItem,
+        // orderDetails.imageProductItem,
       )
       .orderBy(desc(sql`sum(${orderDetails.quantity})`))
       .limit(10);
@@ -436,7 +436,7 @@ export class OrderRepo implements IOrderRepository {
       .select({
         productItemId: orderDetails.productItemId,
         nameProductItem: orderDetails.nameProductItem,
-        imageProductItem: orderDetails.imageProductItem,
+        // imageProductItem: orderDetails.imageProductItem,
         totalRevenue: sql<number>`sum(${orderDetails.totalPriceOrderDetail})::float`,
       })
       .from(orderDetails)
@@ -445,7 +445,7 @@ export class OrderRepo implements IOrderRepository {
       .groupBy(
         orderDetails.productItemId,
         orderDetails.nameProductItem,
-        orderDetails.imageProductItem,
+        // orderDetails.imageProductItem,
       )
       .orderBy(desc(sql`sum(${orderDetails.totalPriceOrderDetail})`))
       .limit(10);
