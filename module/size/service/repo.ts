@@ -1,4 +1,4 @@
-import { and, eq, ilike } from "drizzle-orm";
+import { and, eq, ilike, asc } from "drizzle-orm";
 import { db } from "../../../src/shared/common/neon";
 import { sizes, sizeTypes } from "../../../src/shared/common/neon/schema";
 import { ISizeRepository } from "../interface";
@@ -135,5 +135,25 @@ export class SizeRepo implements ISizeRepository {
       .where(ilike(sizeTypes.nameSizeType, `%${sizeTypeName}%`));
 
     return result.map((row) => row.sizes);
+  }
+  async findSizeAddNameSizeType(): Promise<any[]> {
+    const result = await db
+      .select({
+        id: sizes.id,
+        sizeTypeId: sizes.sizeTypeId,
+        nameSize: sizes.nameSize,
+        status: sizes.status,
+        created_at: sizes.created_at,
+        updated_at: sizes.updated_at,
+        deleted_at: sizes.deleted_at,
+        restored_at: sizes.restored_at,
+
+        nameSizeType: sizeTypes.nameSizeType,
+      })
+      .from(sizes)
+      .innerJoin(sizeTypes, eq(sizes.sizeTypeId, sizeTypes.id))
+      .orderBy(asc(sizeTypes.nameSizeType));
+
+    return result;
   }
 }

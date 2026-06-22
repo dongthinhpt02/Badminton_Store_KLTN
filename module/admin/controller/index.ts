@@ -353,6 +353,10 @@ export class HttpAdminController {
       await this.sizeServuce.getSizeBySizeTypeNameAdmin(nameSizeType);
     return successResponse(data, ctx);
   }
+  private async getSizeAndNameSizeType(ctx: Context) {
+    const data = await this.sizeServuce.getSizeAndNameSizeType();
+    return successResponse(data, ctx);
+  }
   // ********************* product ********************* //
   private async insertProduct(ctx: Context) {
     const form = ctx.body as ICreateProductForm;
@@ -912,6 +916,7 @@ export class HttpAdminController {
       .get("/inactive", this.getAllSizeInactive.bind(this))
       .get("/search/id", this.getSizeByIdAdmin.bind(this))
       .get("/search/name", this.getSizeByNameAdmin.bind(this))
+      .get("/sizetypename", this.getSizeAndNameSizeType.bind(this))
       .post("/create", this.insertSize.bind(this))
       .put("/update", this.updateSize.bind(this))
       .put("/delete", this.deleteSize.bind(this))

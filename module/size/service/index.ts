@@ -50,4 +50,7 @@ export class SizeService implements ISizeService {
   async getSizeBySizeTypeNameAdmin(sizeTypeName: string): Promise<Size[]> {
     return await this.sizeRepo.findSizeBySizeTypeNameAdmin(sizeTypeName);
   }
+  async getSizeAndNameSizeType(): Promise<any[]> {
+    return await this.sizeRepo.findSizeAddNameSizeType();
+  }
 }

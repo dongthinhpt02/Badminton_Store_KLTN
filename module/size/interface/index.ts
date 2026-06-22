@@ -16,6 +16,7 @@ export interface ISizeRepository {
   findSizeBySizeTypeIdAdmin: (sizeTypeId: string) => Promise<Size[]>;
   findSizeBySizeTypeName: (sizeTypeName: string) => Promise<Size[]>;
   findSizeBySizeTypeNameAdmin: (sizeTypeName: string) => Promise<Size[]>;
+  findSizeAddNameSizeType: () => Promise<any[]>;
 }
 export interface ISizeService {
   create: (form: ICreateSizeForm) => Promise<Size>;
@@ -33,4 +34,5 @@ export interface ISizeService {
   getSizeBySizeTypeIdAdmin: (sizeTypeId: string) => Promise<Size[]>;
   getSizeBySizeTypeName: (sizeTypeName: string) => Promise<Size[]>;
   getSizeBySizeTypeNameAdmin: (sizeTypeName: string) => Promise<Size[]>;
+  getSizeAndNameSizeType: () => Promise<any[]>;
 }
