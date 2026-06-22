@@ -4,6 +4,7 @@ import {
   ICartItemRepository,
   ICartItemService,
 } from "../../cartitem/interface";
+import { Status } from "../../cartitem/model";
 import { IStoreRepository } from "../../store/interface";
 import { IUserRepository } from "../../user/interface";
 import { ICartRepository, ICartService } from "../interface";
@@ -175,8 +176,15 @@ export class CartService implements ICartService {
       throw new Error("User not found");
     }
 
-    // console.log("User:", user);
+    const tickItems = cart.items.filter((item) => item.status === Status.TICK);
 
+    if (tickItems.length === 0) {
+      return {
+        totalCart: 0,
+        shippingFee: 0,
+        totalCartOrder: 0,
+      };
+    }
     // =========================
     // CALCULATE ITEMS
     // =========================
