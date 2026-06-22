@@ -867,8 +867,8 @@ export class HttpAdminController {
       .post("/create", this.insertCate.bind(this))
       .put("/update", this.updateCate.bind(this))
       .put("/delete", this.deleteCate.bind(this))
-      .put("/restore", this.restoreCate.bind(this))
-      .get("/search/id", this.getUserById.bind(this));
+      .put("/restore", this.restoreCate.bind(this));
+    // .get("/search/userid", this.getUserById.bind(this));
     const brandRoutes = new Elysia({ prefix: "/brand" })
       .derive(mdlFactory.auth)
       .get("", this.getAllBrand.bind(this))
