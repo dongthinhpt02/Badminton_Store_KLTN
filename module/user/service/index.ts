@@ -704,6 +704,12 @@ export class UserService implements IUserService {
       email: payload.email,
     });
 
+    if (user && user.status !== "active") {
+      throw AppError.from(ErrInvalidEmailAndPassword, 400).withLog(
+        "Account is not active",
+      );
+    }
+
     // chưa tồn tại thì tự tạo account
     if (!user) {
       const inserted = await db
