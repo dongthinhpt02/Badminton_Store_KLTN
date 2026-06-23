@@ -23,6 +23,7 @@ import {
   ErrEmailAndUsernameExisted,
   ErrEmailNotFound,
   ErrInvalidEmailAndPassword,
+  ErrUserInactivated,
 } from "../model/error";
 import { eq, or, and } from "drizzle-orm";
 import { StringValue } from "ms";
@@ -45,7 +46,7 @@ export class UserService implements IUserService {
     }
 
     if (user.status !== "active") {
-      throw AppError.from(ErrInvalidEmailAndPassword, 400).withLog(
+      throw AppError.from(ErrUserInactivated, 400).withLog(
         "Account is not active",
       );
     }
@@ -705,7 +706,7 @@ export class UserService implements IUserService {
     });
 
     if (user && user.status !== "active") {
-      throw AppError.from(ErrInvalidEmailAndPassword, 400).withLog(
+      throw AppError.from(ErrUserInactivated, 400).withLog(
         "Account is not active",
       );
     }
