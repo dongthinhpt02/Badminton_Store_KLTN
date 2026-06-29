@@ -96,6 +96,7 @@ export class HttpUserController {
 
       // await sendResetPasswordEmail(email.email, resetUrl);
 
+      console.log("USE RESEND");
       await sendResetPasswordEmailResend(email.email, resetUrl);
 
       return successResponse(data, ctx);
