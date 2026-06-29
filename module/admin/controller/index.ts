@@ -38,7 +38,6 @@ import { ICreatePaymentForm, IUpdatePaymentForm } from "../../payment/model";
 import { IStoreService } from "../../store/interface";
 import { ICreateStoreForm, IUpdateStoreForm } from "../../store/model";
 import { IOrderService } from "../../order/interface";
-import { IConservationService } from "../../conservation/interface";
 
 export class HttpAdminController {
   constructor(
@@ -57,7 +56,6 @@ export class HttpAdminController {
     private readonly paymentService: IPaymentService,
     private readonly storeService: IStoreService,
     private readonly orderService: IOrderService,
-    private readonly conservationService: IConservationService,
   ) {}
   // ********************* user ********************* //
   private async signupAdmin(ctx: Context) {
@@ -819,31 +817,6 @@ export class HttpAdminController {
     const data = await this.orderService.getCategoryStatistics();
     return successResponse(data, ctx);
   }
-  // ********************* conservation ********************* //
-  private async getAllConservation(ctx: Context) {
-    const data = await this.conservationService.getAllConservations();
-    return successResponse(data, ctx);
-  }
-  private async getAllWaitingConservation(ctx: Context) {
-    const data = await this.conservationService.getAllWaitingConservations();
-    return successResponse(data, ctx);
-  }
-  private async getAllChattingConservation(ctx: Context) {
-    const data = await this.conservationService.getAllChattingConservations();
-    return successResponse(data, ctx);
-  }
-  private async getAllClosedConservation(ctx: Context) {
-    const data = await this.conservationService.getAllClosedConservations();
-    return successResponse(data, ctx);
-  }
-  private async getConservationMessageForAdmin(ctx: Context) {
-    const conservationId = ctx.query.conservationId;
-    const data =
-      await this.conservationService.getConservationMessagesForAdmin(
-        conservationId,
-      );
-    return successResponse(data, ctx);
-  }
   getRoutes(mdlFactory: MdlFactory) {
     const module = new Elysia({ prefix: "/admin" })
       .post("/signup", this.signupAdmin.bind(this))
@@ -1042,15 +1015,6 @@ export class HttpAdminController {
       .get("/by-brand", this.getBrandStatistics.bind(this))
       .get("/by-cate", this.getCategoryStatistics.bind(this));
 
-    const conservationRoutes = new Elysia({ prefix: "/conservation" })
-      .derive(mdlFactory.auth)
-      .get("", this.getAllConservation.bind(this))
-      .get("/waiting", this.getAllWaitingConservation.bind(this))
-      .get("/chatting", this.getAllChattingConservation.bind(this))
-      .get("/closed", this.getAllClosedConservation.bind(this))
-      .get("/id", this.getConservationMessageForAdmin.bind(this));
-
-    module.use(conservationRoutes);
     module.use(statisticRoutes);
     module.use(orderRoutes);
     module.use(storeRoutes);
