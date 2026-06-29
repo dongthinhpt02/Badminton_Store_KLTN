@@ -77,6 +77,10 @@ const appConfig = {
   RESEND: {
     apiKey: process.env.RESEND_API_KEY as string,
   },
+  BREVO: {
+    smtpUser: process.env.BREVO_SMTP_USER as string,
+    smtpPass: process.env.BREVO_SMTP_PASS as string,
+  },
 };
 
 export default appConfig;
