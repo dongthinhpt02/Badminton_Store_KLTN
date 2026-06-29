@@ -20,16 +20,6 @@ import { setupCartModule } from "../module/cart";
 import { setupOrderModule } from "../module/order";
 import setupManagerMiddlewares from "./shared/middleware/manager";
 import { setupManagerModule } from "../module/manager";
-import { setupConservationModule } from "../module/conservation";
-import {
-  conservationSocket,
-  conservationSocketTest,
-  conservationSocketTest1,
-} from "../module/conservation/websocket/websocket";
-import {
-  publishConservation,
-  setSocketServer,
-} from "../module/conservation/websocket";
 
 // import testDB from "./testdb";
 async function bootServer(port: number) {
@@ -58,7 +48,6 @@ async function bootServer(port: number) {
   const paymentModule = setupPaymentModule(sctx);
   const cartModule = setupCartModule(sctx);
   const orderModule = setupOrderModule(sctx);
-  const conservationModule = setupConservationModule(sctx);
 
   const adminModule = setupAdminModule(sctxadmin);
   const managerModule = setupManagerModule(sctxmanager);
@@ -77,34 +66,13 @@ async function bootServer(port: number) {
   app.use(cartModule);
   app.use(orderModule);
 
-  app.use(conservationModule);
-
-  app.use(conservationSocket);
-  app.use(conservationSocketTest);
-  app.use(conservationSocketTest1);
-
   app.use(adminModule);
   app.use(managerModule);
-
-  app.get("/test-publish", () => {
-    publishConservation("3fc775db-8652-4027-b518-9a74e3f20fdb", {
-      type: "new_message",
-      data: {
-        content: "hello websocket",
-      },
-    });
-
-    return {
-      success: true,
-    };
-  });
 
   app.use(swagger());
 
   // start server
   app.listen(port);
-
-  setSocketServer(app.server!);
 
   console.log(
     `🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`,
