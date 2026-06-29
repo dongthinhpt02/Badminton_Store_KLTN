@@ -86,12 +86,20 @@ export class HttpUserController {
     return successResponse(data, ctx);
   }
   private async sendEmailToResetPassword(ctx: Context) {
-    const email = resetPassowrdSchema.parse(ctx.body);
-    const data = await this.service.sendEmailToResetPassword(email);
-    // const resetUrl = `${appConfig.app.baseUrl}/users/reset-password?token=${data}`;
-    const resetUrl = `https://badminton-accessories.vercel.app/reset-password?token=${data}`;
-    await sendResetPasswordEmail(email.email, resetUrl);
-    return successResponse(data, ctx);
+    try {
+      const email = resetPassowrdSchema.parse(ctx.body);
+
+      const data = await this.service.sendEmailToResetPassword(email);
+
+      const resetUrl = `https://badminton-accessories.vercel.app/reset-password?token=${data}`;
+
+      await sendResetPasswordEmail(email.email, resetUrl);
+
+      return successResponse(data, ctx);
+    } catch (err) {
+      console.error("RESET PASSWORD ERROR:", err);
+      throw err;
+    }
   }
   private async resetPassword(ctx: Context) {
     const token = ctx.query.token;
