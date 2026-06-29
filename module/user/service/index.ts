@@ -540,37 +540,79 @@ export class UserService implements IUserService {
 
     return result[0];
   }
+  // async sendEmailToResetPassword(form: IResetPasswordForm): Promise<string> {
+  //   const user = await this.repository.findByCond({
+  //     email: form.email,
+  //   });
+
+  //   if (!user) {
+  //     throw AppError.from(ErrEmailNotFound, 400).withLog("Email not found");
+  //   }
+
+  //   // 🧠 nếu đã có token thì reuse
+  //   if (user.forgot_password_token) {
+  //     return user.forgot_password_token;
+  //   }
+
+  //   // 🔑 generate token
+  //   const token = await this.repository.generateToken(
+  //     user.id, // ❗ PostgreSQL dùng id, không phải _id
+  //     TokenType.ForgotPasswordToken,
+  //     appConfig.jwt.resetPasswordTokenExpiresIn,
+  //   );
+
+  //   // 💾 update vào DB
+  //   await db
+  //     .update(users)
+  //     .set({
+  //       forgotPasswordToken: token,
+  //       updated_at: new Date(),
+  //     })
+  //     .where(eq(users.id, user.id));
+
+  //   return token;
+  // }
   async sendEmailToResetPassword(form: IResetPasswordForm): Promise<string> {
-    const user = await this.repository.findByCond({
-      email: form.email,
-    });
+    try {
+      const user = await this.repository.findByCond({
+        email: form.email,
+      });
 
-    if (!user) {
-      throw AppError.from(ErrEmailNotFound, 400).withLog("Email not found");
+      if (!user) {
+        throw AppError.from(ErrEmailNotFound, 404).withLog("Email not found");
+      }
+
+      if (user.forgot_password_token) {
+        return user.forgot_password_token;
+      }
+
+      const token = await this.repository.generateToken(
+        user.id,
+        TokenType.ForgotPasswordToken,
+        appConfig.jwt.resetPasswordTokenExpiresIn,
+      );
+
+      await db
+        .update(users)
+        .set({
+          forgotPasswordToken: token,
+          updated_at: new Date(),
+        })
+        .where(eq(users.id, user.id));
+
+      return token;
+    } catch (error) {
+      if (error instanceof AppError) {
+        throw error;
+      }
+
+      console.error(error);
+
+      throw AppError.from(
+        new Error("Unable to generate reset password token"),
+        500,
+      ).withLog("Reset password failed");
     }
-
-    // 🧠 nếu đã có token thì reuse
-    if (user.forgot_password_token) {
-      return user.forgot_password_token;
-    }
-
-    // 🔑 generate token
-    const token = await this.repository.generateToken(
-      user.id, // ❗ PostgreSQL dùng id, không phải _id
-      TokenType.ForgotPasswordToken,
-      appConfig.jwt.resetPasswordTokenExpiresIn,
-    );
-
-    // 💾 update vào DB
-    await db
-      .update(users)
-      .set({
-        forgotPasswordToken: token,
-        updated_at: new Date(),
-      })
-      .where(eq(users.id, user.id));
-
-    return token;
   }
   async changePassword(
     token: string,

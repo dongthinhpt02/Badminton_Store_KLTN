@@ -89,7 +89,7 @@ export class HttpUserController {
     const email = resetPassowrdSchema.parse(ctx.body);
     const data = await this.service.sendEmailToResetPassword(email);
     // const resetUrl = `${appConfig.app.baseUrl}/users/reset-password?token=${data}`;
-    const resetUrl = `https://badminton-accessories.vercel.app/reset-password?token=${data}`;
+    const resetUrl = `https://badminton-api-production.up.railway.app/reset-password?token=${data}`;
     await sendResetPasswordEmail(email.email, resetUrl);
     return successResponse(data, ctx);
   }
