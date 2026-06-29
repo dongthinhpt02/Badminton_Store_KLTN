@@ -66,11 +66,11 @@ export class HttpManagerController {
   }
   // ********************* size & sizetype ********************* //
   private async getAllActiveSizeType(ctx: Context) {
-    const data = await this.sizeTypeService.getAllActive();
+    const data = await this.sizeTypeService.getAllActive;
     return successResponse(data, ctx);
   }
   private async getAllAcitveSize(ctx: Context) {
-    const data = await this.sizeService.getAllActive();
+    const data = await this.sizeService.getSizeAndNameSizeType();
     return successResponse(data, ctx);
   }
   // ********************* color ********************* //
