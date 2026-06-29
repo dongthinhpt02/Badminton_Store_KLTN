@@ -5,8 +5,6 @@ import { CategoryService } from "../category/service";
 import { CategoryRepo } from "../category/service/repo";
 import { ColorService } from "../color/service";
 import { ColorRepo } from "../color/service/repo";
-import { ConservationService } from "../conservation/service";
-import { ConservationRepo } from "../conservation/service/repo";
 import { ImagekitService } from "../imagekit/service";
 import { ImportService } from "../import/service";
 import { ImportRepo } from "../import/service/repo";
@@ -44,7 +42,6 @@ export function setupManagerModule(sctx: ServiceContext) {
   const importRepo = new ImportRepo();
   const importDetailRepo = new ImportDetailRepo(productItemRepo);
   const storeRepo = new StoreRepo();
-  const conservationRepo = new ConservationRepo();
 
   const imagekitService = new ImagekitService();
   const userService = new UserService(userRepo);
@@ -60,7 +57,6 @@ export function setupManagerModule(sctx: ServiceContext) {
   const importService = new ImportService(importRepo);
   const importDetailService = new ImportDetailService(importDetailRepo);
   const storeService = new StoreService(storeRepo);
-  const conservationService = new ConservationService(conservationRepo);
 
   const controller = new HttpManagerController(
     userService,
@@ -76,7 +72,6 @@ export function setupManagerModule(sctx: ServiceContext) {
     importService,
     importDetailService,
     storeService,
-    conservationService,
   );
 
   return controller.getRoutes(sctx.mdlFactory);
