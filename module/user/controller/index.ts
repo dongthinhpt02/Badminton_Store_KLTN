@@ -17,6 +17,7 @@ import { sendResetPasswordEmail } from "../../../src/shared/utils/mailer";
 import appConfig from "../../../src/shared/common/config";
 import logger from "../../../src/shared/utils/logger";
 import { googleLoginSchema } from "../model/google";
+import { sendResetPasswordEmailResend } from "../../../src/shared/utils/mailerResend";
 
 export class HttpUserController {
   constructor(private readonly service: IUserService) {}
@@ -93,7 +94,9 @@ export class HttpUserController {
 
       const resetUrl = `https://badminton-accessories.vercel.app/reset-password?token=${data}`;
 
-      await sendResetPasswordEmail(email.email, resetUrl);
+      // await sendResetPasswordEmail(email.email, resetUrl);
+
+      await sendResetPasswordEmailResend(email.email, resetUrl);
 
       return successResponse(data, ctx);
     } catch (err) {

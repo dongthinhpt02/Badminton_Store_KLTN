@@ -74,6 +74,9 @@ const appConfig = {
     applicationId: process.env.SENDBIRD_APPLICATION_ID as string,
     apiToken: process.env.SENDBIRD_API_TOKEN as string,
   },
+  RESEND: {
+    apiKey: process.env.RESEND_API_KEY as string,
+  },
 };
 
 export default appConfig;
