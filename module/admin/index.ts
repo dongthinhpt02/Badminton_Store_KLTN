@@ -23,6 +23,7 @@ import { ProductItemService } from "../productitem/service";
 import { ProductItemRepo } from "../productitem/service/repo";
 import { PromotionService } from "../promotion/service";
 import { PromotionRepo } from "../promotion/service/repo";
+import { SendbirdService } from "../sendbird/service";
 import { SizeService } from "../size/service";
 import { SizeRepo } from "../size/service/repo";
 import { SizeTypeService } from "../sizetype/service";
@@ -82,6 +83,7 @@ export function setupAdminModule(sctx: ServiceContext) {
   );
   const storeService = new StoreService(storeRepository);
   const orderService = new OrderService(orderRepository);
+  const sendBirdService = new SendbirdService();
 
   const controller = new HttpAdminController(
     userService,
@@ -99,6 +101,7 @@ export function setupAdminModule(sctx: ServiceContext) {
     paymentService,
     storeService,
     orderService,
+    sendBirdService,
   );
 
   return controller.getRoutes(sctx.mdlFactory);

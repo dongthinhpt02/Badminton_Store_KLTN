@@ -38,6 +38,7 @@ import { ICreatePaymentForm, IUpdatePaymentForm } from "../../payment/model";
 import { IStoreService } from "../../store/interface";
 import { ICreateStoreForm, IUpdateStoreForm } from "../../store/model";
 import { IOrderService } from "../../order/interface";
+import { ISendbirdService } from "../../sendbird/interface";
 
 export class HttpAdminController {
   constructor(
@@ -56,6 +57,7 @@ export class HttpAdminController {
     private readonly paymentService: IPaymentService,
     private readonly storeService: IStoreService,
     private readonly orderService: IOrderService,
+    private readonly sendbirdService: ISendbirdService,
   ) {}
   // ********************* user ********************* //
   private async signupAdmin(ctx: Context) {
@@ -817,6 +819,17 @@ export class HttpAdminController {
     const data = await this.orderService.getCategoryStatistics();
     return successResponse(data, ctx);
   }
+  // ********************* sendbird ********************* //
+  private async getAllGroupChannels(ctx: Context) {
+    const data = await this.sendbirdService.getAllGroupChannels();
+    return successResponse(data, ctx);
+  }
+  private async getMessagesFromGroupChannel(ctx: Context) {
+    const channelUrl = ctx.query.channelUrl;
+    const data =
+      await this.sendbirdService.getMessagesFromGroupChannel(channelUrl);
+    return successResponse(data, ctx);
+  }
   getRoutes(mdlFactory: MdlFactory) {
     const module = new Elysia({ prefix: "/admin" })
       .post("/signup", this.signupAdmin.bind(this))
@@ -1015,6 +1028,15 @@ export class HttpAdminController {
       .get("/by-brand", this.getBrandStatistics.bind(this))
       .get("/by-cate", this.getCategoryStatistics.bind(this));
 
+    const sendbirdRoutes = new Elysia({ prefix: "/sendbird" })
+      .derive(mdlFactory.auth)
+      .get("/get-all-group-channels", this.getAllGroupChannels.bind(this))
+      .get(
+        "/get-messages-from-group-channel",
+        this.getMessagesFromGroupChannel.bind(this),
+      );
+
+    module.use(sendbirdRoutes);
     module.use(statisticRoutes);
     module.use(orderRoutes);
     module.use(storeRoutes);
