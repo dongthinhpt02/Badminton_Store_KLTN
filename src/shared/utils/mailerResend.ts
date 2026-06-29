@@ -8,7 +8,7 @@ export async function sendResetPasswordEmailResend(
   resetLink: string,
 ) {
   await resend.emails.send({
-    from: "Badminton Store <no-reply@badminton-accessories.vercel.app>",
+    from: "Badminton Store <onboarding@resend.dev>",
     to,
     subject: "Reset your password",
     html: `
