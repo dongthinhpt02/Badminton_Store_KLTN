@@ -172,6 +172,7 @@ export class OrderRepo implements IOrderRepository {
       .update(orders)
       .set({
         status: OrderStatus.DELIVERED,
+        delivered_at: new Date(),
       })
       .where(
         and(eq(orders.id, orderId), eq(orders.status, OrderStatus.PROCESSING)),
@@ -249,7 +250,7 @@ export class OrderRepo implements IOrderRepository {
   ): Promise<Order[]> {
     const result = await db
       .update(orders)
-      .set({ status: OrderStatus.COMPLETED })
+      .set({ status: OrderStatus.COMPLETED, completed_at: new Date() })
       .where(
         and(
           eq(orders.id, id),
