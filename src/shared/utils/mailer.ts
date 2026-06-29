@@ -3,8 +3,8 @@ import appConfig from "../common/config";
 
 export const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
-  port: 465,
-  secure: true,
+  port: 587,
+  secure: false,
   // service: "gmail",
   auth: {
     user: appConfig.google.smtpGoogleEmail,
