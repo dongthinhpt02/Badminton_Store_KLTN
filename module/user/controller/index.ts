@@ -94,10 +94,10 @@ export class HttpUserController {
 
       const resetUrl = `https://badminton-accessories.vercel.app/reset-password?token=${data}`;
 
-      // await sendResetPasswordEmail(email.email, resetUrl);
+      await sendResetPasswordEmail(email.email, resetUrl);
 
-      console.log("USE RESEND");
-      await sendResetPasswordEmailResend(email.email, resetUrl);
+      // console.log("USE RESEND");
+      // await sendResetPasswordEmailResend(email.email, resetUrl);
 
       return successResponse(data, ctx);
     } catch (err) {
