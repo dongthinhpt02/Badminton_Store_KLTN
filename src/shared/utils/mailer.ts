@@ -1,25 +1,25 @@
 import nodemailer from "nodemailer";
 import appConfig from "../common/config";
 
-// export const transporter = nodemailer.createTransport({
-//   host: "smtp.gmail.com",
-//   port: 587,
-//   secure: false,
-//   // service: "gmail",
-//   auth: {
-//     user: appConfig.google.smtpGoogleEmail,
-//     pass: appConfig.google.smtpGooglePassword,
-//   },
-// });
 export const transporter = nodemailer.createTransport({
-  host: "smtp-relay.brevo.com",
+  host: "smtp.gmail.com",
   port: 587,
   secure: false,
+  // service: "gmail",
   auth: {
-    user: appConfig.BREVO.smtpUser,
-    pass: appConfig.BREVO.smtpPass,
+    user: appConfig.google.smtpGoogleEmail,
+    pass: appConfig.google.smtpGooglePassword,
   },
 });
+// export const transporter = nodemailer.createTransport({
+//   host: "smtp-relay.brevo.com",
+//   port: 587,
+//   secure: false,
+//   auth: {
+//     user: appConfig.BREVO.smtpUser,
+//     pass: appConfig.BREVO.smtpPass,
+//   },
+// });
 
 export async function sendResetPasswordEmail(to: string, resetLink: string) {
   await transporter.sendMail({

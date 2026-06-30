@@ -39,22 +39,42 @@ export class ProductItemRepo implements IProductItemRepository {
     id: string,
     form: IUpdateProductItemForm,
   ): Promise<ProductItem | null> {
-    const normalized = form.nameProductItem
-      ? normalizeText(form.nameProductItem)
-      : undefined;
+    const updateData: Partial<typeof productItems.$inferInsert> = {
+      updated_at: new Date(),
+    };
+
+    if (form.nameProductItem !== undefined) {
+      updateData.nameProductItem = form.nameProductItem.trim();
+      updateData.normalizedNameProductItem = normalizeText(
+        form.nameProductItem,
+      );
+    }
+
+    if (form.imageProductItem !== undefined) {
+      // undefined => không cập nhật
+      // null => xóa ảnh
+      // [] => cập nhật thành mảng rỗng
+      updateData.imageProductItem = form.imageProductItem;
+    }
+
+    if (form.description !== undefined) {
+      updateData.description = form.description?.trim() ?? null;
+    }
+
+    if (form.price !== undefined) {
+      updateData.price = form.price;
+    }
+
+    if (form.status !== undefined) {
+      updateData.status = form.status;
+    }
+
     const result = await db
       .update(productItems)
-      .set({
-        ...form,
-        nameProductItem: form.nameProductItem?.trim(),
-        normalizedNameProductItem: normalized,
-        imageProductItem: form.imageProductItem ?? null,
-        description: form.description?.trim() ?? null,
-        price: form.price,
-        updated_at: new Date(),
-      })
+      .set(updateData)
       .where(eq(productItems.id, id))
       .returning();
+
     return result[0] ?? null;
   }
   async updateQuantity(
