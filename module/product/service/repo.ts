@@ -25,17 +25,32 @@ export class ProductRepo implements IProductRepository {
     return result[0];
   }
   async update(id: string, form: IUpdateProductForm): Promise<Product | null> {
+    const updateData: Partial<typeof products.$inferInsert> = {
+      updated_at: new Date(),
+    };
+
+    if (form.nameProduct !== undefined) {
+      updateData.nameProduct = form.nameProduct.trim();
+    }
+
+    if (form.imageProduct !== undefined) {
+      updateData.imageProduct = form.imageProduct?.trim() ?? null;
+    }
+
+    if (form.description !== undefined) {
+      updateData.description = form.description?.trim() ?? null;
+    }
+
+    if (form.status !== undefined) {
+      updateData.status = form.status;
+    }
+
     const result = await db
       .update(products)
-      .set({
-        ...form,
-        nameProduct: form.nameProduct?.trim(),
-        imageProduct: form.imageProduct?.trim() ?? null,
-        description: form.description?.trim() ?? null,
-        updated_at: new Date(),
-      })
+      .set(updateData)
       .where(eq(products.id, id))
       .returning();
+
     return result[0] ?? null;
   }
   async delete(id: string): Promise<boolean> {

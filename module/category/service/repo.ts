@@ -20,18 +20,36 @@ export class CategoryRepo implements ICateRepository {
     return result[0];
   }
   async update(id: string, form: IUpdateCateForm): Promise<Cate | null> {
+    const updateData: Partial<typeof categories.$inferInsert> = {
+      updated_at: new Date(),
+    };
+
+    if (form.nameCate !== undefined) {
+      updateData.nameCate = form.nameCate.trim();
+    }
+
+    if (form.imageCate !== undefined) {
+      // undefined -> không cập nhật
+      // null -> xóa ảnh (nếu schema cho phép)
+      // string -> cập nhật ảnh mới
+      updateData.imageCate = form.imageCate?.trim() ?? null;
+    }
+
+    if (form.description !== undefined) {
+      updateData.description = form.description?.trim() ?? null;
+    }
+
+    if (form.status !== undefined) {
+      updateData.status = form.status;
+    }
+
     const result = await db
       .update(categories)
-      .set({
-        ...form,
-        nameCate: form.nameCate?.trim(),
-        imageCate: form.imageCate?.trim(),
-        description: form.description?.trim(),
-        updated_at: new Date(),
-      })
+      .set(updateData)
       .where(eq(categories.id, id))
       .returning();
-    return result[0];
+
+    return result[0] ?? null;
   }
   async delete(id: string): Promise<boolean> {
     const result = await db
